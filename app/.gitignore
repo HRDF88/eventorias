@@ -1,0 +1,11 @@
+/build
+/local.properties
+/.idea
+/*.iml
+/google-services.json
+/google-services.plist
+*.log
+.DS_Store
+Thumbs.db
+/node_modules/
+*.kotlin_metadata
