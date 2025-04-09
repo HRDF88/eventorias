@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Eventorias</string>
+
+    //AuthScreen
+    <string name="google_sign_in">Sign in with Google</string>
+    <string name="email_sign_in">Sign in with email</string>
+
+    //Content description Auth Screen
+
 </resources>

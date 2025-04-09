@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Eventorias</string>
+
+    //AuthScreen
+    <string name="google_sign_in">Connectez-vous avec Google</string>
+    <string name="email_sign_in">Connectez-vous avec l\'e-mail</string>
+
+    //Content description Auth Screen
+
+
+
+</resources>
