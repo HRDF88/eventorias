@@ -2,9 +2,9 @@ package com.nedrysystems.eventorias.data.webService.firebase
 
 import android.app.Activity
 import android.content.Intent
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.nedrysystems.eventorias.data.webService.serviceInterface.AuthApi
@@ -18,7 +18,7 @@ class FirebaseAuthService : AuthApi {
     private var signInDeferred: CompletableDeferred<FirebaseUser?>? = null
 
 
-    override fun onSignInResult(result: ActivityResult) {
+    override fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         if (result.resultCode == Activity.RESULT_OK) {
             val user = auth.currentUser
             signInDeferred?.complete(user)
