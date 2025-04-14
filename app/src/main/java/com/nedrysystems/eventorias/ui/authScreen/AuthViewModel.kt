@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.ui.auth
+package com.nedrysystems.eventorias.ui.authScreen
 
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
