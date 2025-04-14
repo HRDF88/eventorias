@@ -1,12 +1,12 @@
 package com.nedrysystems.eventorias.ui.auth
 
 import android.content.Intent
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
-import com.nedrysystems.eventorias.data.webService.serviceInterface.AuthApi
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
+import com.nedrysystems.eventorias.R
+import com.nedrysystems.eventorias.domain.useCase.user.container.UserUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -15,24 +15,31 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor(private val authService: AuthApi) : ViewModel() {
+class AuthViewModel @Inject constructor(
+    private val userUseCases: UserUseCases
+) : ViewModel() {
 
-    private val _user = MutableStateFlow<FirebaseUser?>(authService.getCurrentUser())
-    val user: StateFlow<FirebaseUser?> = _user.asStateFlow()
+    private val _uiState = MutableStateFlow(AuthUiState(user = userUseCases.getCurrentUser()))
+    val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    fun onSignInResult(result: ActivityResult) {
-        authService.onSignInResult(result)
+    fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
+        userUseCases.onSignInResult(result)
     }
 
-    fun signOut() {
-        authService.signOut()
-        _user.value = null
-    }
 
     fun launchSignIn(launcher: ActivityResultLauncher<Intent>) {
         viewModelScope.launch {
-            val user = authService.signIn(launcher)
-            _user.value = user
+            _uiState.value = _uiState.value.copy(isLoading = true, errorResId = null)
+            try {
+                val user = userUseCases.signIn(launcher)
+                if (user != null) {
+                    _uiState.value = AuthUiState(user = user)
+                } else {
+                    _uiState.value = AuthUiState(errorResId = R.string.auth_error_connection)
+                }
+            } catch (e: Exception) {
+                _uiState.value = AuthUiState(errorResId = R.string.auth_error_connection)
+            }
         }
     }
 }

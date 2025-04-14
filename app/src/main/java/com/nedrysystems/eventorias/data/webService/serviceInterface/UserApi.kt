@@ -3,12 +3,16 @@ package com.nedrysystems.eventorias.data.webService.serviceInterface
 import android.content.Intent
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseUser
+import com.nedrysystems.eventorias.domain.model.User
+import kotlinx.coroutines.flow.Flow
 
-interface AuthApi {
+interface UserApi {
     fun onSignInResult(result: FirebaseAuthUIAuthenticationResult)
-    suspend fun signIn(launcher: ActivityResultLauncher<Intent>) : FirebaseUser?
+    suspend fun signIn(launcher: ActivityResultLauncher<Intent>) : User?
     fun signOut()
-    fun getCurrentUser(): FirebaseUser?
+    fun getCurrentUser(): User?
     fun isUserLoggedIn(): Boolean
+    fun setNotificationEnable(enable : Boolean)
+    fun insertCurrentUser()
+    fun loadUser() : Flow<User>
 }

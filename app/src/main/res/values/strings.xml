@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Eventorias</string>
+    <string name="select_picture">Select a photo</string>
+    <string name="no_select_photo">No image selected</string>
 
     //AuthScreen
     <string name="google_sign_in">Sign in with Google</string>
     <string name="email_sign_in">Sign in with email</string>
+    <string name="auth_error_connection">Sign-in failed.</string>
 
     //Content description Auth Screen
 
