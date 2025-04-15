@@ -3,6 +3,10 @@ package com.nedrysystems.eventorias.domain.mapper
 import com.google.firebase.firestore.DocumentSnapshot
 import com.nedrysystems.eventorias.domain.model.Coordinate
 import com.nedrysystems.eventorias.domain.model.Event
+import com.nedrysystems.eventorias.ui.uiModel.EventUiModel
+import com.nedrysystems.eventorias.utils.Base64Converter
+import com.nedrysystems.eventorias.utils.BitmapConverter
+import com.nedrysystems.eventorias.utils.DateFormatter
 
 fun Event.toDomain(): Event {
     return Event(
@@ -51,3 +55,24 @@ fun DocumentSnapshot.toEvent(): Event? {
         profilPicture = data["profilPicture"] as? String ?: ""
     )
 }
+
+fun Event.toUiModel(): EventUiModel {
+
+    val dateFormatted = DateFormatter.formatDate(timestamp)
+
+    val profileBitmap = BitmapConverter.fromByteArray(Base64Converter.fromBase64(profilPicture))
+    val eventBitmap = BitmapConverter.fromByteArray(Base64Converter.fromBase64(picture))
+
+    return EventUiModel(
+        id = id,
+        title = tittle,
+        description = description,
+        formattedDate = dateFormatted,
+        address = adresse,
+        coordinateGps = cordinateGps,
+        profileImage = profileBitmap,
+        eventImage = eventBitmap
+    )
+}
+
+

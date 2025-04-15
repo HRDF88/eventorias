@@ -3,7 +3,6 @@ package com.nedrysystems.eventorias
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -13,8 +12,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
-import com.nedrysystems.eventorias.ui.auth.AuthScreen
+import com.nedrysystems.eventorias.ui.authScreen.AuthScreen
+import com.nedrysystems.eventorias.ui.component.BottomBar
+import com.nedrysystems.eventorias.ui.eventListScreen.EventListScreen
+import com.nedrysystems.eventorias.ui.homeScreen.HomeScreen
 import com.nedrysystems.eventorias.ui.theme.EventoriasTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,5 +54,31 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 fun GreetingPreview() {
     EventoriasTheme {
         Greeting("Android")
+    }
+}
+@Composable
+fun NavHostApp() {
+    val navController = rememberNavController()
+
+    Scaffold { innerPadding ->
+
+        NavHost(
+            navController = navController,
+            startDestination = "home",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable("home") {
+                // Ecran Home avec BottomBar
+                HomeScreen(navController = navController)
+            }
+            composable("event") {
+
+
+            }
+            composable("profil") {
+
+
+            }
+        }
     }
 }

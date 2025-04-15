@@ -29,7 +29,7 @@ import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.EmailSignInButton
 import com.nedrysystems.eventorias.ui.component.GoogleSignInButton
-import com.nedrysystems.eventorias.ui.theme.GrayEventorias
+import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
@@ -57,7 +57,7 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
         modifier = Modifier
             .fillMaxSize()
             .fillMaxWidth()
-            .background(color = GrayEventorias)
+            .background(color = GrayEventoriasBackground)
             .padding(6.dp)
     ) {
 

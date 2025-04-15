@@ -17,6 +17,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -26,87 +27,73 @@ import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 
 @Composable
-fun BottomBar() {
-    val navController = rememberNavController()
+fun BottomBar(navController: NavController) {
     val currentDestination = navController.currentBackStackEntryAsState().value?.destination?.route
 
-    Scaffold(
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    selected = currentDestination == "event",
-                    onClick = { navController.navigate("event") },
-                    icon = {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .background(
-                                    color = if (currentDestination == "event") GraysEventoriasField else GrayEventoriasBackground,
-                                    shape = MaterialTheme.shapes.extraLarge
-                                )
-                                .padding(10.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.event),
-                                contentDescription = "Événements",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.events),
-                            color = Color.White
+    NavigationBar {
+        NavigationBarItem(
+            selected = currentDestination == "event",
+            onClick = { navController.navigate("event") },
+            icon = {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .background(
+                            color = if (currentDestination == "event") GraysEventoriasField else GrayEventoriasBackground,
+                            shape = MaterialTheme.shapes.extraLarge
                         )
-                    },
-                    modifier = Modifier.background(GrayEventoriasBackground)
-                )
-                NavigationBarItem(
-                    selected = currentDestination == "profile",
-                    onClick = { navController.navigate("profile") },
-                    icon = {
-                        Box(
-                            contentAlignment = Alignment.Center,
-                            modifier = Modifier
-                                .background(
-                                    color = if (currentDestination == "profile") GraysEventoriasField else GrayEventoriasBackground,
-                                    shape = MaterialTheme.shapes.extraLarge
-                                )
-                                .padding(10.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.person),
-                                contentDescription = "Événements",
-                                tint = Color.White
-                            )
-                        }
-                    },
-                    label = {
-                        Text(
-                            text = stringResource(R.string.profile),
-                            color = Color.White
-                        )
-                    },
-                    modifier = Modifier.background(GrayEventoriasBackground)
-                )
-            }
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = "home",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable("home") { //HomeScreen() }
-                composable("settings") { //SettingsScreen() }
+                        .padding(10.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.event),
+                        contentDescription = "Événements",
+                        tint = Color.White
+                    )
                 }
-            }
-        }
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.events),
+                    color = Color.White
+                )
+            },
+            modifier = Modifier.background(GrayEventoriasBackground)
+        )
+        NavigationBarItem(
+            selected = currentDestination == "profile",
+            onClick = { navController.navigate("profile") },
+            icon = {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .background(
+                            color = if (currentDestination == "profile") GraysEventoriasField else GrayEventoriasBackground,
+                            shape = MaterialTheme.shapes.extraLarge
+                        )
+                        .padding(10.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.person),
+                        contentDescription = "Profile",
+                        tint = Color.White
+                    )
+                }
+            },
+            label = {
+                Text(
+                    text = stringResource(R.string.profile),
+                    color = Color.White
+                )
+            },
+            modifier = Modifier.background(GrayEventoriasBackground)
+        )
     }
 }
+
 
 @Preview
 @Composable
 fun PreviewBottomBar() {
-    BottomBar()
+    val navController = rememberNavController()
+    BottomBar(navController = navController)
 }

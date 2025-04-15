@@ -3,6 +3,17 @@
     <string name="app_name">Eventorias</string>
     <string name="select_picture">Select a photo</string>
     <string name="no_select_photo">No image selected</string>
+    <string name="events">Events</string>
+    <string name="profile">Profile</string>
+
+    //Error component
+    <string name="error">Error</string>
+    <string name="error_display">An error has occurred,</string>
+    <string name="try_later">please try again later</string>
+    <string name="try_again">Try again</string>
+
+    //EventCard
+    <string name="profile_picture_description">User account profile picture</string>
 
     //AuthScreen
     <string name="google_sign_in">Sign in with Google</string>
@@ -10,5 +21,8 @@
     <string name="auth_error_connection">Sign-in failed.</string>
 
     //Content description Auth Screen
+
+    //EventListScreen
+    <string name="event_list_tittle">Event List</string>
 
 </resources>

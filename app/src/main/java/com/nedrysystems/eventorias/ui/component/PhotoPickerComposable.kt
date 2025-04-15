@@ -51,7 +51,7 @@ fun PhotoPickerComposable(
 
     var resizedBitmap by remember { mutableStateOf<Bitmap?>(null) }
 
-    // 📸 Camera launcher
+    // Camera launcher
     val takePhoto = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicturePreview()
     ) { bitmap: Bitmap? ->
@@ -62,7 +62,7 @@ fun PhotoPickerComposable(
         }
     }
 
-    // Gallery picker luncher
+    // Gallery picker launcher
     val pickMedia = rememberLauncherForActivityResult(
         contract = PickVisualMedia(),
         onResult = { uri ->
@@ -91,8 +91,8 @@ fun PhotoPickerComposable(
     ) {
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.padding(12.dp)
         ) {
 
             Button(
@@ -107,7 +107,8 @@ fun PhotoPickerComposable(
                 Icon(
                     painter = painterResource(R.drawable.photo_camera),
                     contentDescription = "",
-                    tint = Color.Black
+                    tint = Color.Black,
+                    modifier = Modifier.size(32.dp)
                 )
             }
 
@@ -123,7 +124,8 @@ fun PhotoPickerComposable(
                 Icon(
                     painter = painterResource(R.drawable.attach_file),
                     contentDescription = "",
-                    tint = Color.White
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
                 )
             }
 
@@ -160,7 +162,7 @@ fun PhotoPickerComposable(
 
 
 @Composable
-@Preview(showBackground = true)
+@Preview(showBackground = false)
 fun PhotoPickerPreview() {
     PhotoPickerComposable(imageBitmap = null, onImageBitmapChanged = {})
 }
