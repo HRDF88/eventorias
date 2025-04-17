@@ -16,7 +16,7 @@ class EventRepository @Inject constructor(private val eventApi: EventApi) :
         return eventApi.getEventById(id)
     }
 
-    override fun getAllEvents(tittle: String, orderByTimestamp: Boolean?): Flow<Event> {
+    override fun getAllEvents(tittle: String, orderByTimestamp: Boolean?): Flow<List<Event>> {
         return eventApi.getAllEvent(tittle, orderByTimestamp)
     }
 }

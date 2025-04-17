@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetAllEventsUseCase @Inject constructor(
     private val repository: EventRepositoryInterface
 ) {
-    operator fun invoke(tittle: String, orderByTimestamp: Boolean? = null): Flow<Event> {
+    operator fun invoke(tittle: String, orderByTimestamp: Boolean? = null): Flow<List<Event>> {
         return repository.getAllEvents(tittle, orderByTimestamp)
     }
 }

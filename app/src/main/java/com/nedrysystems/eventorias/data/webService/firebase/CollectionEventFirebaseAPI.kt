@@ -41,7 +41,7 @@ class CollectionEventFirebaseAPI @Inject constructor(
         awaitClose { listener.remove() }
     }
 
-    override fun getAllEvent(tittle: String, orderByTimestamp: Boolean?): Flow<Event> =
+    override fun getAllEvent(tittle: String, orderByTimestamp: Boolean?): Flow<List<Event>> =
         callbackFlow {
             var query = eventCollection.whereEqualTo("tittle", tittle)
             if (orderByTimestamp == true) {
@@ -53,11 +53,11 @@ class CollectionEventFirebaseAPI @Inject constructor(
                     close(error)
                     return@addSnapshotListener
                 }
-                snapshot?.documents?.forEach { doc ->
-                    doc.toEvent()?.let { trySend(it) }
-                }
+                val events = snapshot?.documents?.mapNotNull { doc -> doc.toEvent() } ?: emptyList()
+                trySend(events)
             }
 
             awaitClose { listener.remove() }
         }
+
 }

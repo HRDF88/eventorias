@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 interface EventRepositoryInterface {
     fun addEvent(event: Event): Flow<Event>
     fun getEventById(id: String): Flow<Event>
-    fun getAllEvents(tittle: String, orderByTimestamp: Boolean? = null): Flow<Event>
+    fun getAllEvents(tittle: String, orderByTimestamp: Boolean? = null): Flow<List<Event>>
 }

@@ -1,10 +1,14 @@
 package com.nedrysystems.eventorias.di
 
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import com.nedrysystems.eventorias.data.repository.EventRepository
 import com.nedrysystems.eventorias.data.repository.UserRepository
 import com.nedrysystems.eventorias.data.repositoryInterface.EventRepositoryInterface
 import com.nedrysystems.eventorias.data.repositoryInterface.UserRepositoryInterface
+import com.nedrysystems.eventorias.data.webService.firebase.CollectionEventFirebaseAPI
 import com.nedrysystems.eventorias.data.webService.firebase.FirebaseUserService
+import com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService
 import com.nedrysystems.eventorias.data.webService.serviceInterface.EventApi
 import com.nedrysystems.eventorias.data.webService.serviceInterface.UserApi
 import com.nedrysystems.eventorias.domain.useCase.event.container.EventUseCases
@@ -42,6 +46,12 @@ object AppModule {
     }
 
     @Provides
+    @Singleton
+    fun provideEventApi(): EventApi {
+        return CollectionEventFirebaseAPI(Firebase.firestore)
+    }
+
+    @Provides
     fun provideUserRepository(userApi: UserApi): UserRepositoryInterface {
         return UserRepository(userApi)
     }
@@ -74,6 +84,11 @@ object AppModule {
             getAllEvents = GetAllEventsUseCase(repository)
 
         )
+    }
+
+    @Provides
+    fun provideFirebaseMessagingService(): MyFirebaseMessagingService {
+        return MyFirebaseMessagingService()
     }
 
 }

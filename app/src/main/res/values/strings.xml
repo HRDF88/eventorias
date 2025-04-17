@@ -25,4 +25,13 @@
     //EventListScreen
     <string name="event_list_tittle">Event List</string>
 
+    //UserProfileScreen
+    <string name="user_profile_tittle">User profile</string>
+    <string name="name">Name</string>
+    <string name="email">E-mail</string>
+    <string name="error_load_user">Error to load user profile</string>
+
+    //AddScreen
+    <string name="add_tittle">Creation of an event</string>
+
 </resources>

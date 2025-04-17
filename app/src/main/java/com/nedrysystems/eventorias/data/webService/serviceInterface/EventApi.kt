@@ -8,5 +8,5 @@ interface EventApi {
 
     fun getEventById(id : String) : Flow<Event>
 
-    fun getAllEvent(tittle : String, orderByTimestamp : Boolean?) : Flow<Event>
+    fun getAllEvent(tittle : String, orderByTimestamp : Boolean?) : Flow<List<Event>>
 }
