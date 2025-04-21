@@ -1,12 +1,15 @@
 package com.nedrysystems.eventorias
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -20,6 +23,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.auth.FirebaseAuth
 import com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService
 import com.nedrysystems.eventorias.ui.authScreen.AuthScreen
 import com.nedrysystems.eventorias.ui.eventListScreen.EventListScreen
@@ -36,20 +41,39 @@ class MainActivity : ComponentActivity() {
 
     private val REQUEST_CODE_PERMISSIONS = 1001
 
+    private lateinit var signInLauncher: ActivityResultLauncher<Intent>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        signInLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val response = IdpResponse.fromResultIntent(result.data)
+                if (result.resultCode == RESULT_OK) {
+                    val user = FirebaseAuth.getInstance().currentUser
+                    Log.d("Auth", "Connexion réussie : ${user?.email}")
+                } else {
+                    if (response == null) {
+                        Log.d("Auth", "Connexion annulée par l’utilisateur.")
+                    } else {
+                        Log.e("Auth", "Erreur de connexion", response.error)
+                    }
+                }
+            }
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.READ_MEDIA_IMAGES
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            // Si la permission n'est pas accordée, demandez-la à l'exécution
+
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
                 REQUEST_CODE_PERMISSIONS
             )
         }
+
         setContent {
             EventoriasTheme {
                 Surface(
@@ -99,11 +123,11 @@ fun NavHostApp() {
 
         NavHost(
             navController = navController,
-            startDestination = "home",
+            startDestination = "login",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = "login") {
-                AuthScreen()
+                AuthScreen(navController = navController)
             }
             composable("home") {
                 HomeScreen(navController = navController)

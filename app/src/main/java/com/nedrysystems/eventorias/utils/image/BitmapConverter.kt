@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.utils
+package com.nedrysystems.eventorias.utils.image
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -12,7 +12,7 @@ object BitmapConverter {
     /**
      * Default quality for bitmap compression, defined in SizeBitmapCONST.
      */
-    private const val qualityConvert = SizeBitmapCONST.quality
+    const val qualityConvert = SizeBitmapCONST.quality
 
     /**
      * Converts a Bitmap into a ByteArray with a customizable format and quality.

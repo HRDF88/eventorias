@@ -1,10 +1,12 @@
 package com.nedrysystems.eventorias.domain.mapper
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import coil.compose.rememberImagePainter
 import com.google.firebase.auth.FirebaseUser
+import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.domain.model.User
 import com.nedrysystems.eventorias.ui.uiModel.UserUiModel
-import com.nedrysystems.eventorias.utils.Base64Converter
-import com.nedrysystems.eventorias.utils.BitmapConverter
 
 fun FirebaseUser.toDomainUser(): User {
     return User(
@@ -25,18 +27,25 @@ fun User.toFirestoreMap(): Map<String, Any> {
         "asNotification" to asNotification
     )
 }
-
+/*
     // Extension pour mapper User → UserUiModel
+    @Composable
     fun User.toUiModel(): UserUiModel {
-        // Convertit la chaîne Base64 en tableau d’octets, puis en Bitmap
-        val profileBitmap = BitmapConverter
-            .fromByteArray(Base64Converter.fromBase64(profilPicture))
+        // Créer un `Painter` Coil pour l'image de profil
+        val profileImage: Painter = rememberImagePainter(
+            data = profilPicture, // l'URL de l'image
+            builder = {
+                crossfade(true) // Ajoute une animation de fondu lors du chargement de l'image
+                error(R.drawable.ic_error) // Affiche une image d'erreur si l'image ne peut pas être chargée
+            }
+        )
 
         return UserUiModel(
             id = id,
             name = name,
             email = email,
-            profileImage = profileBitmap,
+            profileImage = profileImage, // Image gérée par Coil
             hasNotification = asNotification
         )
     }
+*/

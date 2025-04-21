@@ -81,11 +81,9 @@ fun EventListScreen(
             )
         },
         floatingActionButton = {
-            // Le bouton flottant "Plus"
             FloatingActionButton(
                 onClick = {
-                    // Action à effectuer lorsque le bouton flottant est cliqué
-                    // par exemple, naviguer vers une page d'ajout d'événement
+
                 },
                 containerColor = Color.Red
             ) {

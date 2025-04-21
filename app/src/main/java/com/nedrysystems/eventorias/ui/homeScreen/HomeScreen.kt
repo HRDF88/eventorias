@@ -1,5 +1,8 @@
 package com.nedrysystems.eventorias.ui.homeScreen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -18,26 +21,36 @@ import com.nedrysystems.eventorias.ui.userProfileScreen.UserProfileScreen
 @Composable
 fun HomeScreen(navController: NavController) {
     val internalNavController = rememberNavController()
-    val user =
 
-    Scaffold(containerColor = GrayEventoriasBackground,
+    Scaffold(
+        containerColor = GrayEventoriasBackground,
         bottomBar = { BottomBar(navController = internalNavController) }
     ) { innerPadding ->
-        NavHost(
-            navController = internalNavController,
-            startDestination = Screen.Event.route,
-            modifier = Modifier.padding(innerPadding)
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(GrayEventoriasBackground)
+                .padding(innerPadding)
         ) {
-            composable(Screen.Event.route) {
-                EventListScreen(
-                    onFilterClick = { /* TODO */ },
-                    onSearchClick = { /* TODO */ },
-                    viewModel = hiltViewModel()
-                )
-            }
-            composable(Screen.Profile.route) {
-                UserProfileScreen()
+            NavHost(
+                navController = internalNavController,
+                startDestination = Screen.Event.route,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                composable(Screen.Event.route) {
+                    EventListScreen(
+                        onFilterClick = { /* TODO */ },
+                        onSearchClick = { /* TODO */ },
+                        viewModel = hiltViewModel()
+                    )
+                }
+                composable(Screen.Profile.route) {
+                    UserProfileScreen()
+                }
             }
         }
     }
 }
+

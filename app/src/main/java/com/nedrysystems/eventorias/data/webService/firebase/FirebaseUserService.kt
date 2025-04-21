@@ -2,6 +2,7 @@ package com.nedrysystems.eventorias.data.webService.firebase
 
 import android.app.Activity
 import android.content.Intent
+import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
@@ -24,17 +25,21 @@ class FirebaseUserService : UserApi {
     private var signInDeferred: CompletableDeferred<FirebaseUser?>? = null
 
     private val firestore = FirebaseFirestore.getInstance()
-    private val usersCollection = firestore.collection("users")
+    private val usersCollection = firestore.collection("User")
 
 
     override fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
+        Log.d("AuthUI", "onSignInResult called with resultCode: ${result.resultCode}")
         if (result.resultCode == Activity.RESULT_OK) {
             val user = auth.currentUser
+            Log.d("AuthUI", "User signed in: ${user?.email}")
             signInDeferred?.complete(user)
         } else {
+            Log.d("AuthUI", "Sign-in failed or cancelled")
             signInDeferred?.complete(null)
         }
     }
+
 
     override suspend fun signIn(launcher: ActivityResultLauncher<Intent>): User? {
         if (signInDeferred != null && !signInDeferred!!.isCompleted) {
@@ -105,4 +110,6 @@ class FirebaseUserService : UserApi {
 
         awaitClose { listener.remove() }
     }
+
+
 }

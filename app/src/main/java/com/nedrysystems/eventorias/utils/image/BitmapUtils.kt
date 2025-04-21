@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.utils
+package com.nedrysystems.eventorias.utils.image
 
 import android.content.Context
 import android.graphics.Bitmap

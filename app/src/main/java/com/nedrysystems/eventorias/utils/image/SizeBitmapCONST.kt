@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.utils
+package com.nedrysystems.eventorias.utils.image
 
 /**
  * Utility object that defines constant values for bitmap size and quality.

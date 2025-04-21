@@ -25,6 +25,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.EmailSignInButton
@@ -32,7 +34,7 @@ import com.nedrysystems.eventorias.ui.component.GoogleSignInButton
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
+fun AuthScreen(navController: NavController, viewModel: AuthViewModel = hiltViewModel()) {
 
     val uiState by viewModel.uiState.collectAsState()
 
@@ -51,6 +53,16 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
             Toast.makeText(context, context.getString(it), Toast.LENGTH_SHORT).show()
         }
     }
+
+    LaunchedEffect(uiState.user) {
+        uiState.user?.let {
+            navController.navigate("home") {
+                popUpTo("auth") { inclusive = true }
+            }
+        }
+    }
+
+
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -78,13 +90,13 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
                 .fillMaxWidth()
         ) {
             GoogleSignInButton {
-                viewModel.launchSignIn(launcher)
+                viewModel.signIn(launcher)
             }
 
             Spacer(modifier = Modifier.height(6.dp))
 
             EmailSignInButton {
-                viewModel.launchSignIn(launcher)
+                viewModel.signIn(launcher)
             }
         }
 
@@ -105,5 +117,6 @@ fun AuthScreen(viewModel: AuthViewModel = hiltViewModel()) {
     @Preview
     @Composable
     fun PreviewAuthScreen() {
-        AuthScreen()
+        val navController = rememberNavController()
+        AuthScreen(navController = navController)
     }

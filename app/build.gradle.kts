@@ -95,20 +95,17 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation("androidx.browser:browser:1.6.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
+
+
 
     // Firebase UI Auth
-    implementation("com.firebaseui:firebase-ui-auth:8.0.2")
+    implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 
-    // Google Auth & Identity APIs
-    implementation("com.google.android.gms:play-services-auth:21.3.0")
-    implementation("com.google.android.gms:play-services-base:18.7.0")
-    implementation("com.google.android.gms:play-services-identity:18.0.1")
 
-    implementation("com.google.android.gms:play-services-auth-api-phone:18.0.1")
 
     // AndroidX Credentials API
-    implementation(libs.androidx.credentials)
-    implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
 
     // Hilt DI

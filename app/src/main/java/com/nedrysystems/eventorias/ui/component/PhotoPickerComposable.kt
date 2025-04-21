@@ -36,9 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nedrysystems.eventorias.R
-import com.nedrysystems.eventorias.utils.BitmapUtils
-import com.nedrysystems.eventorias.utils.BitmapUtils.uriToBitmap
-import com.nedrysystems.eventorias.utils.SizeBitmapCONST
+import com.nedrysystems.eventorias.utils.image.BitmapUtils
+import com.nedrysystems.eventorias.utils.image.BitmapUtils.uriToBitmap
+import com.nedrysystems.eventorias.utils.image.SizeBitmapCONST
 
 @Composable
 fun PhotoPickerComposable(

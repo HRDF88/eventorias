@@ -4,8 +4,8 @@ import com.google.firebase.firestore.DocumentSnapshot
 import com.nedrysystems.eventorias.domain.model.Coordinate
 import com.nedrysystems.eventorias.domain.model.Event
 import com.nedrysystems.eventorias.ui.uiModel.EventUiModel
-import com.nedrysystems.eventorias.utils.Base64Converter
-import com.nedrysystems.eventorias.utils.BitmapConverter
+import com.nedrysystems.eventorias.utils.image.Base64Converter
+import com.nedrysystems.eventorias.utils.image.BitmapConverter
 import com.nedrysystems.eventorias.utils.DateFormatter
 
 fun Event.toDomain(): Event {
