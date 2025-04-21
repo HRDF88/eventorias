@@ -43,7 +43,8 @@ fun HomeScreen(navController: NavController) {
                     EventListScreen(
                         onFilterClick = { /* TODO */ },
                         onSearchClick = { /* TODO */ },
-                        viewModel = hiltViewModel()
+                        viewModel = hiltViewModel(),
+                        navController = navController
                     )
                 }
                 composable(Screen.Profile.route) {

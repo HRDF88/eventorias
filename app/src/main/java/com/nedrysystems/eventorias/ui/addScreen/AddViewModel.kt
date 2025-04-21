@@ -10,6 +10,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddViewModel @Inject constructor(private val eventUseCases: EventUseCases) : ViewModel(){
 
-    private val _uiState = MutableStateFlow(AddUiState(isLoading = true))
+    private val _uiState = MutableStateFlow(AddUiState(isLoading = false))
     val uiState: StateFlow<AddUiState> = _uiState
 }

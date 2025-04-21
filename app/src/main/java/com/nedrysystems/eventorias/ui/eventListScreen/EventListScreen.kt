@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.EventCard
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
@@ -33,6 +34,7 @@ import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventListScreen(
+    navController: NavController,
     onFilterClick: () -> Unit,
     onSearchClick: () -> Unit,
     viewModel: EventListViewModel
@@ -84,6 +86,8 @@ fun EventListScreen(
             FloatingActionButton(
                 onClick = {
 
+                    navController.navigate(route = "add")
+
                 },
                 containerColor = Color.Red
             ) {
@@ -106,9 +110,10 @@ fun EventListScreen(
 
         LazyColumn(
             modifier = Modifier
+                .background(GrayEventoriasBackground)
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(GrayEventoriasBackground)
+
         ) {
             items(eventState.event) { event ->
                 EventCard(eventUi = event)

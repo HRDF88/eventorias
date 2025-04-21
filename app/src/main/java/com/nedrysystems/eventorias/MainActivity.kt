@@ -26,6 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService
+import com.nedrysystems.eventorias.ui.addScreen.AddScreen
 import com.nedrysystems.eventorias.ui.authScreen.AuthScreen
 import com.nedrysystems.eventorias.ui.eventListScreen.EventListScreen
 import com.nedrysystems.eventorias.ui.homeScreen.HomeScreen
@@ -136,12 +137,17 @@ fun NavHostApp() {
                 EventListScreen(
                     onFilterClick = { },
                     onSearchClick = { },
-                    viewModel = hiltViewModel()
+                    viewModel = hiltViewModel(),
+                    navController = navController
                 )
 
             }
             composable("profile") {
                 UserProfileScreen()
+            }
+
+            composable(route = "add") {
+                AddScreen(navController = navController, viewModel = hiltViewModel())
             }
 
         }

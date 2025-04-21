@@ -33,5 +33,16 @@
 
     //AddScreen
     <string name="add_tittle">Creation of an event</string>
+    <string name="title">Title</string>
+    <string name="new_event">New event</string>
+    <string name="description">Description</string>
+    <string name="label_description">Tap here to enter your description</string>
+    <string name="date">Date</string>
+    <string name="label_date">MM/DD/YYYY</string>
+    <string name="time">Time</string>
+    <string name="label_time">HH : MM</string>
+    <string name="address">Address</string>
+    <string name="label_address">Enter full address</string>
+    <string name="validate">Validate</string>
 
 </resources>
