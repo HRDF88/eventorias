@@ -1,12 +1,16 @@
 package com.nedrysystems.eventorias.domain.mapper
 
+import android.graphics.Bitmap
 import com.google.firebase.firestore.DocumentSnapshot
 import com.nedrysystems.eventorias.domain.model.Coordinate
 import com.nedrysystems.eventorias.domain.model.Event
 import com.nedrysystems.eventorias.ui.uiModel.EventUiModel
 import com.nedrysystems.eventorias.utils.image.Base64Converter
 import com.nedrysystems.eventorias.utils.image.BitmapConverter
-import com.nedrysystems.eventorias.utils.DateFormatter
+import com.nedrysystems.eventorias.utils.date.DateFormatter
+import com.nedrysystems.eventorias.utils.serviceInterface.GeolocationService
+import java.util.UUID
+import javax.inject.Inject
 
 fun Event.toDomain(): Event {
     return Event(
@@ -74,5 +78,40 @@ fun Event.toUiModel(): EventUiModel {
         eventImage = eventBitmap
     )
 }
+
+class EventMapper @Inject constructor(private val geoService: GeolocationService) {
+    suspend fun mapFormToEvent(
+        date: String,
+        hour: String,
+        title: String,
+        description: String,
+        address: String,
+        profilPicture: String,
+        eventPicture: Bitmap?
+    ): Event {
+        val eventId = UUID.randomUUID().toString()
+        val dateTime = "$date $hour"
+        val timestamp = DateFormatter.parseDateTimeToTimestamp(dateTime)
+
+
+        val eventPictureBase64 = eventPicture?.let {
+            Base64Converter.toBase64(BitmapConverter.toByteArray(it))
+        } ?: ""
+
+        val gps = geoService.getCoordinatesFromAddress(address) ?: Coordinate(0.0, 0.0)
+
+        return Event(
+            id = eventId,
+            tittle = title.trim(),
+            description = description.trim(),
+            timestamp = timestamp,
+            picture = eventPictureBase64,
+            adresse = address.trim(),
+            cordinateGps = gps,
+            profilPicture = profilPicture
+        )
+    }
+}
+
 
 

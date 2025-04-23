@@ -16,7 +16,7 @@ class CollectionEventFirebaseAPI @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : EventApi {
 
-    private val eventCollection = firestore.collection("events")
+    private val eventCollection = firestore.collection("Event")
 
     override fun add(event: Event): Flow<Event> = callbackFlow {
         try {

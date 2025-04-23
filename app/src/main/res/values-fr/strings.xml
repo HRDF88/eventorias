@@ -44,6 +44,19 @@
     <string name="address">Adresse</string>
     <string name="label_address">Entrez l\'adresse complète</string>
     <string name="validate">Valider</string>
+    <string name="error_empty_title">Entrez le titre de l\'événement pour continuer</string>
+    <string name="error_empty_description">Entrez la description de l\'événement pour continuer</string>
+    <string name="error_empty_date">Entrez la date de l\'événement pour continuer</string>
+    <string name="error_empty_hour">Entrez l\'heure de l\'événement pour continuer</string>
+    <string name="error_empty_address">Entrez l\'adresse de l\'événement pour continuer</string>
+    <string name="error_invalid_date">Format de date incorrect</string>
+    <string name="error_invalid_hour">Format d\'heure incorrect</string>
+    <string name="success_message">Événement ajouté avec succès</string>
+    <string name="success_false_message">Erreur lors de l\'ajout de l\'événement</string>
+
+
+
+
 
 
 

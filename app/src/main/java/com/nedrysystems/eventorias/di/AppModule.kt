@@ -1,5 +1,6 @@
 package com.nedrysystems.eventorias.di
 
+import android.content.Context
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.nedrysystems.eventorias.data.repository.EventRepository
@@ -24,9 +25,12 @@ import com.nedrysystems.eventorias.domain.useCase.user.useCase.OnSignInResultUse
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.SetNotificationEnableUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.SignInUserUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.SignOutUserUseCase
+import com.nedrysystems.eventorias.utils.geoLocation.AndroidGeolocationService
+import com.nedrysystems.eventorias.utils.serviceInterface.GeolocationService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -89,6 +93,13 @@ object AppModule {
     @Provides
     fun provideFirebaseMessagingService(): MyFirebaseMessagingService {
         return MyFirebaseMessagingService()
+    }
+
+    @Provides
+    fun provideGeolocationService(
+        @ApplicationContext context: Context
+    ): GeolocationService {
+        return AndroidGeolocationService(context)
     }
 
 }

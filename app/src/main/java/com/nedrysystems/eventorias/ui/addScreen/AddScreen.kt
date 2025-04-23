@@ -1,5 +1,6 @@
 package com.nedrysystems.eventorias.ui.addScreen
 
+import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -39,8 +41,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -48,6 +52,7 @@ import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.PhotoPickerComposable
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
+import com.nedrysystems.eventorias.utils.date.DateFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,20 +64,77 @@ fun AddScreen(
     val errorMessage = eventState.error?.let {
         stringResource(id = it)
     } ?: ""
+    val successAdEvent = eventState.message?.let {
+        stringResource(id = it)
+    } ?: ""
     val context = LocalContext.current
 
-    var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var date by remember { mutableStateOf("") }
-    var hour by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
+    //Textfield customization
+    val textFieldPattern = TextFieldDefaults.colors(
+        focusedContainerColor = GraysEventoriasField,
+        unfocusedContainerColor = GraysEventoriasField,
+        disabledContainerColor = GraysEventoriasField,
+        focusedIndicatorColor = Color.White,
+        unfocusedIndicatorColor = Color.Transparent,
+        cursorColor = Color.White,
+        focusedTextColor = Color.White,
+        unfocusedTextColor = Color.White,
+        focusedLabelColor = Color.White,
+        unfocusedLabelColor = Color.White,
+        focusedPlaceholderColor = Color.White,
+        unfocusedPlaceholderColor = Color.White
+    )
+    val textColor = Color.White
+    val textErrorColor = Color.Red
 
+    //States
+    var title by remember { mutableStateOf(TextFieldValue("")) }
+    var description by remember { mutableStateOf(TextFieldValue("")) }
+    var date by remember { mutableStateOf(TextFieldValue("")) }
+    var hour by remember { mutableStateOf(TextFieldValue("")) }
+    var address by remember { mutableStateOf(TextFieldValue("")) }
+    var eventImage by remember { mutableStateOf<Bitmap?>(null) }
+    val profilPictureUrl = eventState.user?.profilPicture
+
+    //Error States
+    var isTitleError by remember { mutableStateOf(false) }
+    var isDescriptionError by remember { mutableStateOf(false) }
+    var isDateError by remember { mutableStateOf(false) }
+    var isHourError by remember { mutableStateOf(false) }
+    var isAddressError by remember { mutableStateOf(false) }
+
+    //Error Empty Message
+    val errorEmptyTitle = stringResource(R.string.error_empty_title)
+    val errorEmptyDescription = stringResource(R.string.error_empty_description)
+    val errorEmptyDate = stringResource(R.string.error_empty_date)
+    val errorEmptyHour = stringResource(R.string.error_empty_hour)
+    val errorEmptyAddress = stringResource(R.string.error_empty_address)
+
+
+    //Error Message
+    var titleErrorMessage by remember { mutableStateOf("") }
+    var descriptionErrorMessage by remember { mutableStateOf("") }
+    var dateErrorMessage by remember { mutableStateOf("") }
+    var hourErrorMessage by remember { mutableStateOf("") }
+    var addressErrorMessage by remember { mutableStateOf("") }
+    val errorInvalidDate = stringResource(R.string.error_invalid_date)
+    val errorInvalidHour = stringResource(R.string.error_invalid_hour)
+
+
+    //Field pattern
+    val datePattern = Regex("""^(0[1-9]|1[0-2])/([0][1-9]|[12][0-9]|3[01])/([0-9]{4})$""")
+    val hourPattern = Regex("""^([01][0-9]|2[0-3]):[0-5][0-9]$""")
+
+
+    //Trigger
+    var triggerAddEvent by remember { mutableStateOf(false) }
 
 
     SideEffect {
         if (errorMessage.isNotEmpty()) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
         }
+
     }
 
     Scaffold(
@@ -117,22 +179,34 @@ fun AddScreen(
                 .padding(innerPadding)
                 .padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Top
         ) {
 
             TextField(
                 value = title,
-                onValueChange = { title = it },
+                onValueChange = {
+                    title = it
+                    when {
+                        title.text.isEmpty() -> {
+                            isTitleError = true
+                            titleErrorMessage = errorEmptyTitle
+                        }
+                        else -> {
+                            isTitleError = false
+                           titleErrorMessage = ""
+                        }
+                    }
+                },
                 label = {
                     Text(
                         text = stringResource(R.string.title),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.new_event),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 modifier = Modifier
@@ -141,37 +215,44 @@ fun AddScreen(
                     .padding(14.dp),
 
 
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = GraysEventoriasField,
-                    unfocusedContainerColor = GraysEventoriasField,
-                    disabledContainerColor = GraysEventoriasField,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    focusedPlaceholderColor = Color.White,
-                    unfocusedPlaceholderColor = Color.White
-                )
+                colors = textFieldPattern
             )
+            if (isTitleError) {
+                Text(
+                    text = titleErrorMessage,
+                    color = textErrorColor,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
+
 
 
             TextField(
                 value = description,
                 onValueChange = {
                     description = it
-                },  label = {
+                    when {
+                        description.text.isEmpty() -> {
+                            isDescriptionError = true
+                            descriptionErrorMessage = errorEmptyDescription
+                        }
+
+                        else -> {
+                            isDescriptionError = false
+                            descriptionErrorMessage = ""
+                        }
+                    }
+                }, label = {
                     Text(
                         text = stringResource(R.string.description),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.label_description),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 modifier = Modifier
@@ -179,23 +260,19 @@ fun AddScreen(
                     .clip(RoundedCornerShape(16.dp))
                     .padding(14.dp),
 
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = GraysEventoriasField,
-                    unfocusedContainerColor = GraysEventoriasField,
-                    disabledContainerColor = GraysEventoriasField,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    focusedPlaceholderColor = Color.White,
-                    unfocusedPlaceholderColor = Color.White
-                )
+                colors = textFieldPattern
             )
+            if (isDescriptionError) {
+                Text(
+                    text = descriptionErrorMessage,
+                    color = textErrorColor,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
 
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
 
             ) {
@@ -203,17 +280,36 @@ fun AddScreen(
                     value = date,
                     onValueChange = {
                         date = it
+                        val isFormatCorrect = date.text.matches(datePattern)
+                        val isValidCalendarDate = DateFormatter.isValidDate(date.text)
+
+                        when {
+                            date.text.isEmpty() -> {
+                                isDateError = true
+                                dateErrorMessage = errorEmptyDate
+                            }
+
+                            !isFormatCorrect || !isValidCalendarDate-> {
+                                isDateError = true
+                                dateErrorMessage = errorInvalidDate
+                            }
+
+                            else -> {
+                                isDateError = false
+                                dateErrorMessage = ""
+                            }
+                        }
                     },
                     label = {
                         Text(
                             text = stringResource(R.string.date),
-                            color = Color.White
+                            color = textColor
                         )
                     },
                     placeholder = {
                         Text(
                             text = stringResource(R.string.label_date),
-                            color = Color.White
+                            color = textColor
                         )
                     },
                     modifier = Modifier
@@ -221,37 +317,49 @@ fun AddScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .padding(14.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = GraysEventoriasField,
-                        unfocusedContainerColor = GraysEventoriasField,
-                        disabledContainerColor = GraysEventoriasField,
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.White,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.White,
-                        focusedPlaceholderColor = Color.White,
-                        unfocusedPlaceholderColor = Color.White
-                    )
+                    colors = textFieldPattern
                 )
+                if (isDateError) {
+                    Text(
+                        text = dateErrorMessage,
+                        color = textErrorColor,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    )
+                }
 
                 TextField(
                     value = hour,
                     onValueChange = {
                         hour = it
+
+                        when {
+                            hour.text.isEmpty() -> {
+                                isHourError = true
+                                hourErrorMessage = errorEmptyHour
+                            }
+
+                            !hour.text.matches(hourPattern) -> {
+                                isHourError = true
+                                hourErrorMessage = errorInvalidHour
+                            }
+
+                            else -> {
+                                isHourError = false
+                                hourErrorMessage = ""
+                            }
+                        }
                     },
                     label = {
                         Text(
                             text = stringResource(R.string.time),
-                            color = Color.White
+                            color = textColor
                         )
                     },
                     placeholder = {
                         Text(
                             text = stringResource(R.string.label_time),
-                            color = Color.White
+                            color = textColor
                         )
                     },
                     modifier = Modifier
@@ -259,39 +367,45 @@ fun AddScreen(
                         .clip(RoundedCornerShape(16.dp))
                         .padding(14.dp),
 
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = GraysEventoriasField,
-                        unfocusedContainerColor = GraysEventoriasField,
-                        disabledContainerColor = GraysEventoriasField,
-                        focusedIndicatorColor = Color.White,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.White,
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedLabelColor = Color.White,
-                        unfocusedLabelColor = Color.White,
-                        focusedPlaceholderColor = Color.White,
-                        unfocusedPlaceholderColor = Color.White
-                    )
+                    colors = textFieldPattern
                 )
 
+            }
+            if (isHourError) {
+                Text(
+                    text = hourErrorMessage,
+                    color = textErrorColor,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
             }
 
             TextField(
                 value = address,
                 onValueChange = {
                     address = it
+                    when {
+                        address.text.isEmpty() -> {
+                            isAddressError = true
+                            addressErrorMessage = errorEmptyAddress
+                        }
+
+                        else -> {
+                            isAddressError = false
+                           addressErrorMessage = ""
+                        }
+                    }
                 },
                 label = {
                     Text(
                         text = stringResource(R.string.address),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 placeholder = {
                     Text(
                         text = stringResource(R.string.label_address),
-                        color = Color.White
+                        color = textColor
                     )
                 },
                 modifier = Modifier
@@ -299,37 +413,65 @@ fun AddScreen(
                     .clip(RoundedCornerShape(16.dp))
                     .padding(14.dp),
 
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = GraysEventoriasField,
-                    unfocusedContainerColor = GraysEventoriasField,
-                    disabledContainerColor = GraysEventoriasField,
-                    focusedIndicatorColor = Color.White,
-                    unfocusedIndicatorColor = Color.Transparent,
-                    cursorColor = Color.White,
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.White,
-                    focusedPlaceholderColor = Color.White,
-                    unfocusedPlaceholderColor = Color.White
-                )
+                colors = textFieldPattern
             )
+            if (isAddressError) {
+                Text(
+                    text = addressErrorMessage,
+                    color = textErrorColor,
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                )
+            }
 
-            PhotoPickerComposable(imageBitmap = null) { }
+            Spacer(modifier = Modifier.height(8.dp))
 
+            PhotoPickerComposable(imageBitmap = eventImage) {eventImage = it }
+
+
+            Spacer(modifier = Modifier.height(60.dp))
+
+            val isFormValid = title.text.isNotBlank() && !isTitleError &&
+                    description.text.isNotBlank() && !isDescriptionError &&
+                    date.text.isNotBlank() && !isDateError &&
+                    hour.text.isNotBlank() && !isHourError &&
+                    address.text.isNotBlank() && !isAddressError
 
             Button(
-                onClick = {},
+                onClick = {triggerAddEvent = true},
+                enabled = isFormValid,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
                     contentColor = Color.White
-                )
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 14.dp)
             ) {
                 Text(text = stringResource(R.string.validate))
             }
         }
     }
+    LaunchedEffect(triggerAddEvent){
+        if (triggerAddEvent) {
+            viewModel.loadUser()
+            viewModel.submitEventForm(
+                date = date.text,
+                hour = hour.text,
+                title = title.text,
+                description = description.text,
+                address = address.text,
+                eventPicture = eventImage
+            )
+            Toast.makeText(context, successAdEvent, Toast.LENGTH_SHORT).show()
+            if(eventState.success){
+                navController.popBackStack()
+            }
+            triggerAddEvent = false
+        }
+    }
 }
+
 
 @Preview(showBackground = true)
 @Composable

@@ -40,9 +40,21 @@
     <string name="date">Date</string>
     <string name="label_date">MM/DD/YYYY</string>
     <string name="time">Time</string>
-    <string name="label_time">HH : MM</string>
+    <string name="label_time">HH:MM</string>
     <string name="address">Address</string>
     <string name="label_address">Enter full address</string>
     <string name="validate">Validate</string>
+
+    <string name="error_empty_title">Enter the title of event to continue</string>
+    <string name="error_empty_description">Enter the description of event to continue</string>
+    <string name="error_empty_date">Enter the date of event to continue</string>
+    <string name="error_empty_hour">Enter the hour of event to continue</string>
+    <string name="error_empty_address">Enter the address of event to continue</string>
+    <string name="error_invalid_date">Incorrect date format</string>
+    <string name="error_invalid_hour">Incorrect hour format</string>
+    <string name="success_message">Event added successfully</string>
+    <string name="success_false_message">Error adding event</string>
+
+
 
 </resources>

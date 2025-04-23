@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.utils
+package com.nedrysystems.eventorias.utils.date
 
 import java.text.SimpleDateFormat
 import java.time.LocalDate
