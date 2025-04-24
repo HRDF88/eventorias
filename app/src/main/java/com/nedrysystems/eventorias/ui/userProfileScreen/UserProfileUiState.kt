@@ -5,5 +5,6 @@ import com.nedrysystems.eventorias.domain.model.User
 data class UserProfileUiState(
     val isLoading: Boolean = false,
     val user: User? = null,
-    val error: Int? = null
+    val error: Int? = null,
+    val asNotification: Boolean = true
 )

@@ -63,4 +63,8 @@ class UserRepository @Inject constructor(
     override fun loadUser(): Flow<User> {
         return userApi.loadUser()
     }
+
+    override suspend fun getNotificationSetting(userId: String): Boolean{
+        return userApi.getNotificationSetting(userId)
+    }
 }

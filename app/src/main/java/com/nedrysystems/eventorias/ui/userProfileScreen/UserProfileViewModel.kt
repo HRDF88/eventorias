@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.domain.useCase.user.container.UserUseCases
+import com.nedrysystems.eventorias.utils.serviceInterface.FCMSubscriptionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +14,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserProfileViewModel @Inject constructor(
-    private val userUseCases: UserUseCases
+    private val userUseCases: UserUseCases,
+    private val fcmSubscriptionManager: FCMSubscriptionManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(UserProfileUiState(isLoading = true))
@@ -29,19 +31,46 @@ class UserProfileViewModel @Inject constructor(
             try {
                 Log.d("UserProfileViewModel", "Loading user...")
 
+                // Récupérer l'utilisateur
                 val user = userUseCases.getCurrentUser()
                 Log.d("UserProfileViewModel", "User retrieved: $user")
 
+                // Récupérer l'état des notifications
+                val notificationSetting = user?.let { userUseCases.getNotificationSetting(it.id) }
+                Log.d("UserProfileViewModel", "Notification setting: $notificationSetting")
 
-                val userUiModel = user
+                // Mettre à jour l'UI state avec l'utilisateur et l'état des notifications
+                val userUiModel = notificationSetting?.let { user.copy(asNotification = it) }
                 Log.d("UserProfileViewModel", "User UI Model: $userUiModel")
 
-
-                _uiState.value = UserProfileUiState(user = userUiModel, isLoading = false)
+                _uiState.value = notificationSetting?.let { UserProfileUiState(user = userUiModel, isLoading = false, asNotification = it) }!!
             } catch (e: Exception) {
                 Log.e("UserProfileViewModel", "Error loading user", e)
                 _uiState.value = UserProfileUiState(error = R.string.error_load_user)
             }
+        }
+    }
+    fun toggleNotificationSetting() {
+        viewModelScope.launch {
+            val currentState = _uiState.value.asNotification
+            val newState = !currentState
+            val userId = _uiState.value.user?.id ?: return@launch
+
+            userUseCases.setNotificationEnable(newState)
+
+            // 👉 Ajoute ici l’appel à l’implémentation FCM :
+            if (newState) {
+                fcmSubscriptionManager.subscribeToNotifications()
+            } else {
+                fcmSubscriptionManager.unsubscribeFromNotifications()
+            }
+
+            _uiState.value = _uiState.value.copy(
+                asNotification = newState,
+                user = _uiState.value.user?.copy(asNotification = newState)
+            )
+
+            Log.d("UserProfileViewModel", "Notification setting updated: $newState")
         }
     }
 }

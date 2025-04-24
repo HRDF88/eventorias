@@ -9,6 +9,7 @@ import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.nedrysystems.eventorias.data.webService.serviceInterface.UserApi
 import com.nedrysystems.eventorias.domain.mapper.toDomainUser
 import com.nedrysystems.eventorias.domain.model.User
@@ -16,6 +17,7 @@ import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.tasks.await
 
 
 class FirebaseUserService : UserApi {
@@ -80,14 +82,38 @@ class FirebaseUserService : UserApi {
 
         val user = firebaseUser.toDomainUser()
 
-        usersCollection.document(user.id).set(user)
+
+        usersCollection.document(user.id).get().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val document = task.result
+                if (!document.exists()) {
+
+                    usersCollection.document(user.id).set(user)
+                        .addOnSuccessListener {
+                            Log.d("FirebaseUserService", "User created: ${user.id}")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("FirebaseUserService", "Error creating user", e)
+                        }
+                }
+            } else {
+                Log.e("FirebaseUserService", "Error checking document existence", task.exception)
+            }
+        }
     }
 
     override fun setNotificationEnable(enable: Boolean) {
         val uid = auth.currentUser?.uid ?: return
 
-        usersCollection.document(uid)
-            .update("asNotification", enable)
+        val userRef = usersCollection.document(uid)
+
+        userRef.set(mapOf("asNotification" to enable), SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d("FirebaseUserService", "Notification setting updated: $enable")
+            }
+            .addOnFailureListener { e ->
+                Log.e("FirebaseUserService", "Error updating notification setting", e)
+            }
     }
 
     override fun loadUser(): Flow<User> = callbackFlow {
@@ -111,5 +137,14 @@ class FirebaseUserService : UserApi {
         awaitClose { listener.remove() }
     }
 
+    override suspend fun getNotificationSetting(userId: String): Boolean {
+        val userRef = usersCollection.document(userId)
+        val snapshot = userRef.get().await()
 
+        return snapshot.getBoolean("asNotification")
+            ?: true // Valeur par défaut à true si elle n'est pas trouvée
+    }
 }
+
+
+

@@ -24,12 +24,15 @@
 
     //EventListScreen
     <string name="event_list_tittle">Event List</string>
+    <string name="search">Search for an event</string>
 
     //UserProfileScreen
     <string name="user_profile_tittle">User profile</string>
     <string name="name">Name</string>
     <string name="email">E-mail</string>
     <string name="error_load_user">Error to load user profile</string>
+    <string name="error_update_notification">Error updating notification setting</string>
+    <string name="notification">Notification</string>
 
     //AddScreen
     <string name="add_tittle">Creation of an event</string>

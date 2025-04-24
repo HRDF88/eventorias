@@ -135,10 +135,8 @@ fun NavHostApp() {
             }
             composable("event") {
                 EventListScreen(
-                    onFilterClick = { },
-                    onSearchClick = { },
-                    viewModel = hiltViewModel(),
-                    navController = navController
+                    navController = navController,
+                    viewModel = hiltViewModel()
                 )
 
             }

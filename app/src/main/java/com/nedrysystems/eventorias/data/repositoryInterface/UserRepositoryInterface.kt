@@ -15,4 +15,5 @@ interface UserRepositoryInterface {
     fun setNotificationEnable(enable: Boolean)
     fun insertCurrentUser()
     fun loadUser(): Flow<User>
+    suspend fun getNotificationSetting(userId: String): Boolean
 }

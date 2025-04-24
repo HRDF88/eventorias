@@ -1,5 +1,7 @@
 package com.nedrysystems.eventorias.data.webService.firebase
 
+import android.util.Log
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nedrysystems.eventorias.data.webService.serviceInterface.EventApi
 import com.nedrysystems.eventorias.domain.mapper.toEvent
@@ -43,13 +45,20 @@ class CollectionEventFirebaseAPI @Inject constructor(
 
     override fun getAllEvent(tittle: String, orderByTimestamp: Boolean?): Flow<List<Event>> =
         callbackFlow {
-            var query = eventCollection.whereEqualTo("tittle", tittle)
+            var query = eventCollection
+                .apply {
+                    if (tittle.isNotBlank()) {
+                        whereEqualTo("tittle", tittle) // Filtre uniquement si le titre est non vide
+                    }
+                }
+
             if (orderByTimestamp == true) {
-                query = query.orderBy("timestamp")
+                query = query.orderBy("timestamp") as CollectionReference
             }
 
             val listener = query.addSnapshotListener { snapshot, error ->
                 if (error != null) {
+                    Log.e("CollectionEventFirebaseAPI", "Error fetching events: ${error.message}", error)
                     close(error)
                     return@addSnapshotListener
                 }
@@ -57,7 +66,11 @@ class CollectionEventFirebaseAPI @Inject constructor(
                 trySend(events)
             }
 
-            awaitClose { listener.remove() }
+            awaitClose {
+                listener.remove()
+                Log.d("CollectionEventFirebaseAPI", "Listener removed for events with title: $tittle")
+            }
         }
+
 
 }

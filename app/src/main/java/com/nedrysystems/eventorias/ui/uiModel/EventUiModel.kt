@@ -10,6 +10,7 @@ data class EventUiModel(
     val formattedDate: String,
     val address: String,
     val coordinateGps: Coordinate?,
-    val profileImage: Bitmap,
-    val eventImage: Bitmap
+    val profileImage: String,
+    val eventImage: Bitmap,
+    val timestamp: Long
 )

@@ -111,6 +111,9 @@ dependencies {
     // Hilt DI
     implementation("com.google.dagger:hilt-android:2.51.1")
     implementation(libs.firebase.messaging.ktx)
+    implementation(libs.androidx.media3.common.ktx)
+    implementation(libs.androidx.storage)
+    implementation(libs.androidx.benchmark.macro)
     kapt("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")

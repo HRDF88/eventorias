@@ -18,6 +18,7 @@ import com.nedrysystems.eventorias.domain.useCase.event.useCase.GetAllEventsUseC
 import com.nedrysystems.eventorias.domain.useCase.event.useCase.GetEventByIdUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.container.UserUseCases
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.GetCurrentUserUseCase
+import com.nedrysystems.eventorias.domain.useCase.user.useCase.GetNotificationSettingUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.InsertCurrentUserUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.IsUserLoggedInUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.LoadUserUseCase
@@ -26,6 +27,8 @@ import com.nedrysystems.eventorias.domain.useCase.user.useCase.SetNotificationEn
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.SignInUserUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.SignOutUserUseCase
 import com.nedrysystems.eventorias.utils.geoLocation.AndroidGeolocationService
+import com.nedrysystems.eventorias.utils.notification.MyFirebaseMessagingServiceSubscribe
+import com.nedrysystems.eventorias.utils.serviceInterface.FCMSubscriptionManager
 import com.nedrysystems.eventorias.utils.serviceInterface.GeolocationService
 import dagger.Module
 import dagger.Provides
@@ -71,6 +74,7 @@ object AppModule {
             setNotificationEnable = SetNotificationEnableUseCase(repository),
             insertCurrentUser = InsertCurrentUserUseCase(repository),
             loadUser = LoadUserUseCase(repository),
+            getNotificationSetting = GetNotificationSettingUseCase(repository)
 
             )
     }
@@ -102,4 +106,9 @@ object AppModule {
         return AndroidGeolocationService(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideFCMSubscriptionManager(): FCMSubscriptionManager {
+        return MyFirebaseMessagingServiceSubscribe
+    }
 }

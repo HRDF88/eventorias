@@ -24,12 +24,15 @@
 
     //EventListScreen
     <string name="event_list_tittle">Liste des événements</string>
+    <string name="search">Rechercher un événement</string>
 
     //UserProfileScreen
     <string name="user_profile_tittle">Profil utilisateur</string>
     <string name="name">Nom</string>
     <string name="email">Email</string>
     <string name="error_load_user">Erreur lors du chargement des données de l\'utilisateur</string>
+    <string name="error_update_notification">Erreur lors de la mise à jour des paramètres de notification</string>
+    <string name="notification">Notification</string>
 
     //AddScreen
     <string name="add_tittle">Création d\'un événement</string>

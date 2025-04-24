@@ -8,15 +8,16 @@ import java.util.Date
 import java.util.Locale
 
 object DateFormatter {
-    fun formatDate(timestamp: Long, locale: Locale = Locale.getDefault()): String {
-        val pattern = when (locale.language) {
-            "fr" -> "dd MMM yyyy"
-            else -> "MMM dd yyyy"
+        fun formatDate(timestamp: Long, locale: Locale = Locale.getDefault()): String {
+            val pattern = when (locale.language) {
+                "fr" -> "dd, MMMM, yyyy"
+                else -> "MMMM, dd, yyyy"
+            }
+
+            val formatter = SimpleDateFormat(pattern, locale)
+            return formatter.format(Date(timestamp))
         }
 
-        val formatter = SimpleDateFormat(pattern, locale)
-        return formatter.format(Date(timestamp))
-    }
 
     fun isValidDate(dateStr: String): Boolean {
         return try {

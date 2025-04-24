@@ -40,6 +40,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.ErrorComposable
+import com.nedrysystems.eventorias.ui.component.NotificationSwapButton
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 
@@ -50,6 +51,7 @@ fun UserProfileScreen(
 ) {
     val userState by viewModel.uiState.collectAsState()
     val user = remember(userState) { userState.user }
+    val isNotificationEnabled = userState.asNotification
     val errorMessage = userState.error?.let {
         stringResource(id = it)
     } ?: ""
@@ -142,6 +144,7 @@ fun UserProfileScreen(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .background(GraysEventoriasField)
+                            .padding(8.dp)
 
 
                     )
@@ -169,13 +172,28 @@ fun UserProfileScreen(
                             .fillMaxWidth()
                             .padding(vertical = 8.dp)
                             .background(GraysEventoriasField)
+                            .padding(8.dp)
                     )
                 }
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(GrayEventoriasBackground)
+                ) {
 
 
+                    NotificationSwapButton(
+                        isChecked = isNotificationEnabled,
+                        onCheckedChange = { viewModel.toggleNotificationSetting() })
+
+                    Text(text = stringResource(R.string.notification), color = Color.White)
+                }
             }
         }
     }
+
 }
 
 @Preview(showBackground = true)

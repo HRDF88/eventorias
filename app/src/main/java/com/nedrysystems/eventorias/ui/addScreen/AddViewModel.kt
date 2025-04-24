@@ -8,7 +8,6 @@ import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.domain.mapper.EventMapper
 import com.nedrysystems.eventorias.domain.useCase.event.container.EventUseCases
 import com.nedrysystems.eventorias.domain.useCase.user.container.UserUseCases
-import com.nedrysystems.eventorias.ui.userProfileScreen.UserProfileUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -90,12 +89,24 @@ class AddViewModel @Inject constructor(
     fun loadUser() {
         viewModelScope.launch {
             try {
+                Log.d("AddEventViewModel", "Loading user...")
                 val user = userUseCases.getCurrentUser()
-                val userUiModel = user
+                Log.d("AddEventViewModel", "User loaded: $user")
+                val userUiModel = user // tu peux le mapper ici si nécessaire
                 _uiState.value = _uiState.value.copy(user = userUiModel)
             } catch (e: Exception) {
-                _uiState.value = AddUiState(error = R.string.error_load_user)
+                Log.e("AddEventViewModel", "Error loading user", e)
+                _uiState.value = _uiState.value.copy(loadUserError = R.string.error_load_user)
+
             }
         }
+    }
+
+
+    fun resetMessage() {
+        _uiState.value = _uiState.value.copy(message = null)
+    }
+    fun resetLoadUserError() {
+        _uiState.value = _uiState.value.copy(loadUserError = null)
     }
 }

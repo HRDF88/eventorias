@@ -1,6 +1,7 @@
 package com.nedrysystems.eventorias.domain.mapper
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.google.firebase.firestore.DocumentSnapshot
 import com.nedrysystems.eventorias.domain.model.Coordinate
 import com.nedrysystems.eventorias.domain.model.Event
@@ -64,8 +65,16 @@ fun Event.toUiModel(): EventUiModel {
 
     val dateFormatted = DateFormatter.formatDate(timestamp)
 
-    val profileBitmap = BitmapConverter.fromByteArray(Base64Converter.fromBase64(profilPicture))
-    val eventBitmap = BitmapConverter.fromByteArray(Base64Converter.fromBase64(picture))
+    val eventBitmap = if (picture.isNotBlank()) {
+        try {
+            BitmapConverter.fromByteArray(Base64Converter.fromBase64(picture))
+        } catch (e: Exception) {
+            Log.e("Event", "Failed to decode event image", e)
+            Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888) // fallback transparent
+        }
+    } else {
+        Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888) // fallback
+    }
 
     return EventUiModel(
         id = id,
@@ -74,8 +83,10 @@ fun Event.toUiModel(): EventUiModel {
         formattedDate = dateFormatted,
         address = adresse,
         coordinateGps = cordinateGps,
-        profileImage = profileBitmap,
-        eventImage = eventBitmap
+        profileImage = profilPicture,
+        eventImage = eventBitmap,
+        timestamp = timestamp
+
     )
 }
 

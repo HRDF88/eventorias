@@ -35,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -42,17 +43,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.PhotoPickerComposable
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 import com.nedrysystems.eventorias.utils.date.DateFormatter
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,9 +66,14 @@ fun AddScreen(
     val errorMessage = eventState.error?.let {
         stringResource(id = it)
     } ?: ""
-    val successAdEvent = eventState.message?.let {
+    val addMessage = eventState.message?.let {
         stringResource(id = it)
     } ?: ""
+
+    val loadUserErrorMessage = eventState.loadUserError?.let {
+        stringResource(id = it)
+    } ?: ""
+
     val context = LocalContext.current
 
     //Textfield customization
@@ -94,7 +101,7 @@ fun AddScreen(
     var hour by remember { mutableStateOf(TextFieldValue("")) }
     var address by remember { mutableStateOf(TextFieldValue("")) }
     var eventImage by remember { mutableStateOf<Bitmap?>(null) }
-    val profilPictureUrl = eventState.user?.profilPicture
+
 
     //Error States
     var isTitleError by remember { mutableStateOf(false) }
@@ -130,11 +137,17 @@ fun AddScreen(
     var triggerAddEvent by remember { mutableStateOf(false) }
 
 
+
     SideEffect {
-        if (errorMessage.isNotEmpty()) {
+        if(eventState.error != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+            viewModel.resetMessage()
         }
 
+        if(eventState.loadUserError != null) {
+            Toast.makeText(context,loadUserErrorMessage, Toast.LENGTH_SHORT).show()
+            viewModel.resetLoadUserError()
+        }
     }
 
     Scaffold(
@@ -191,9 +204,10 @@ fun AddScreen(
                             isTitleError = true
                             titleErrorMessage = errorEmptyTitle
                         }
+
                         else -> {
                             isTitleError = false
-                           titleErrorMessage = ""
+                            titleErrorMessage = ""
                         }
                     }
                 },
@@ -289,7 +303,7 @@ fun AddScreen(
                                 dateErrorMessage = errorEmptyDate
                             }
 
-                            !isFormatCorrect || !isValidCalendarDate-> {
+                            !isFormatCorrect || !isValidCalendarDate -> {
                                 isDateError = true
                                 dateErrorMessage = errorInvalidDate
                             }
@@ -392,7 +406,7 @@ fun AddScreen(
 
                         else -> {
                             isAddressError = false
-                           addressErrorMessage = ""
+                            addressErrorMessage = ""
                         }
                     }
                 },
@@ -426,7 +440,7 @@ fun AddScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            PhotoPickerComposable(imageBitmap = eventImage) {eventImage = it }
+            PhotoPickerComposable(imageBitmap = eventImage) { eventImage = it }
 
 
             Spacer(modifier = Modifier.height(60.dp))
@@ -438,7 +452,7 @@ fun AddScreen(
                     address.text.isNotBlank() && !isAddressError
 
             Button(
-                onClick = {triggerAddEvent = true},
+                onClick = { triggerAddEvent = true },
                 enabled = isFormValid,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
@@ -452,34 +466,46 @@ fun AddScreen(
             }
         }
     }
-    LaunchedEffect(triggerAddEvent){
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUser()
+    }
+    LaunchedEffect(triggerAddEvent) {
         if (triggerAddEvent) {
-            viewModel.loadUser()
-            viewModel.submitEventForm(
-                date = date.text,
-                hour = hour.text,
-                title = title.text,
-                description = description.text,
-                address = address.text,
-                eventPicture = eventImage
-            )
-            Toast.makeText(context, successAdEvent, Toast.LENGTH_SHORT).show()
-            if(eventState.success){
-                navController.popBackStack()
-            }
             triggerAddEvent = false
+
+
+            snapshotFlow { viewModel.uiState.value.user }
+                .filterNotNull()
+                .first()
+                .let {
+                    viewModel.submitEventForm(
+                        date = date.text,
+                        hour = hour.text,
+                        title = title.text,
+                        description = description.text,
+                        address = address.text,
+                        eventPicture = eventImage
+                    )
+                }
+
+            viewModel.uiState
+                .filter { it.success || it.message != null }
+                .first()
+                .let { state ->
+                    if (state.success) {
+                        navController.popBackStack()
+                    } else if (state.message != null) {
+                        Toast.makeText(context, addMessage, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    viewModel.resetMessage()
+                }
+
+
         }
     }
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun AddScreenPreview() {
-    val navController = rememberNavController()
-    AddScreen(
-        navController = navController,
-        viewModel = hiltViewModel()
-    )
-}
 

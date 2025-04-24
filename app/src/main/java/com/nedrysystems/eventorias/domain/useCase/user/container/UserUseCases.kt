@@ -1,6 +1,7 @@
 package com.nedrysystems.eventorias.domain.useCase.user.container
 
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.GetCurrentUserUseCase
+import com.nedrysystems.eventorias.domain.useCase.user.useCase.GetNotificationSettingUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.InsertCurrentUserUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.IsUserLoggedInUseCase
 import com.nedrysystems.eventorias.domain.useCase.user.useCase.LoadUserUseCase
@@ -20,5 +21,6 @@ data class UserUseCases @Inject constructor(
     val setNotificationEnable: SetNotificationEnableUseCase,
     val insertCurrentUser: InsertCurrentUserUseCase,
     val loadUser: LoadUserUseCase,
+    val getNotificationSetting: GetNotificationSettingUseCase
 
 )

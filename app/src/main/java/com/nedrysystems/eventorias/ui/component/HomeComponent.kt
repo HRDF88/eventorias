@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -58,6 +57,7 @@ fun BottomBar(navController: NavController) {
                         color = Color.White
                     )
                 },
+
                 modifier = Modifier
                     .background(GrayEventoriasBackground) // Fond pour chaque item
                     .weight(1f) // Prend la largeur égale
@@ -87,9 +87,9 @@ fun BottomBar(navController: NavController) {
                     )
                 },
                 modifier = Modifier
-                    .background(GrayEventoriasBackground) // Fond pour chaque item
-                    .weight(1f) // Prend la largeur égale
-                    .padding(0.dp) // Aucun padding entre les items
+                    .background(GrayEventoriasBackground)
+                    .weight(1f)
+                    .padding(0.dp)
             )
         }
     }
