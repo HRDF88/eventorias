@@ -13,19 +13,6 @@ import com.nedrysystems.eventorias.utils.serviceInterface.GeolocationService
 import java.util.UUID
 import javax.inject.Inject
 
-fun Event.toDomain(): Event {
-    return Event(
-        id = id,
-        tittle = tittle,
-        description = description,
-        timestamp = timestamp,
-        picture = picture,
-        adresse = adresse,
-        cordinateGps = Coordinate(longitude = 0.0, latitude = 0.0),
-        profilPicture = profilPicture
-    )
-}
-
 fun Event.toFirestoreMap(): Map<String, Any> {
     return mapOf(
         "id" to id,
@@ -64,6 +51,7 @@ fun DocumentSnapshot.toEvent(): Event? {
 fun Event.toUiModel(): EventUiModel {
 
     val dateFormatted = DateFormatter.formatDate(timestamp)
+    val timeFormatted = DateFormatter.formatTime(timestamp)
 
     val eventBitmap = if (picture.isNotBlank()) {
         try {
@@ -85,7 +73,8 @@ fun Event.toUiModel(): EventUiModel {
         coordinateGps = cordinateGps,
         profileImage = profilPicture,
         eventImage = eventBitmap,
-        timestamp = timestamp
+        timestamp = timestamp,
+        formattedTime = timeFormatted
 
     )
 }

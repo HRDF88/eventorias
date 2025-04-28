@@ -142,7 +142,7 @@ class FirebaseUserService : UserApi {
         val snapshot = userRef.get().await()
 
         return snapshot.getBoolean("asNotification")
-            ?: true // Valeur par défaut à true si elle n'est pas trouvée
+            ?: true
     }
 }
 

@@ -12,5 +12,6 @@ data class EventUiModel(
     val coordinateGps: Coordinate?,
     val profileImage: String,
     val eventImage: Bitmap,
-    val timestamp: Long
+    val timestamp: Long,
+    val formattedTime: String
 )

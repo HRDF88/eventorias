@@ -146,7 +146,9 @@ fun EventListScreen(
                         .fillMaxSize()
                 ) {
                     items(eventState.events) { event ->
-                        EventCard(eventUi = event)
+                        EventCard(
+                            eventUi = event,
+                            onClick = { navController.navigate("detail/${event.id}") })
                     }
                 }
             }

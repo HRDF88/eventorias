@@ -18,10 +18,19 @@ object DateFormatter {
             return formatter.format(Date(timestamp))
         }
 
+    fun formatTime(timestamp: Long, locale: Locale = Locale.getDefault()): String {
+        val pattern = when (locale.language) {
+            "fr" -> "HH:mm"
+            else -> "h:mm a"
+        }
+        val formatter = SimpleDateFormat(pattern, locale)
+        return formatter.format(Date(timestamp))
+    }
+
 
     fun isValidDate(dateStr: String): Boolean {
         return try {
-            val formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu")
+            val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
                 .withResolverStyle(ResolverStyle.STRICT)
             LocalDate.parse(dateStr, formatter)
             true
@@ -30,10 +39,10 @@ object DateFormatter {
         }
     }
 
-    // Pour convertir une chaîne de date + heure en timestamp
+
     fun parseDateTimeToTimestamp(dateTimeStr: String): Long {
         return try {
-            val formatter = SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.getDefault()) // Format de date+heure
+            val formatter = SimpleDateFormat("MM/dd/yyyy HH:mm", Locale.getDefault())
             val date = formatter.parse(dateTimeStr)
             date?.time ?: 0L
         } catch (e: Exception) {

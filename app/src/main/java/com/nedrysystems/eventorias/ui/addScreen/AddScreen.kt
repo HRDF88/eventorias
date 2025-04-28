@@ -139,13 +139,13 @@ fun AddScreen(
 
 
     SideEffect {
-        if(eventState.error != null) {
+        if (eventState.error != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
             viewModel.resetMessage()
         }
 
-        if(eventState.loadUserError != null) {
-            Toast.makeText(context,loadUserErrorMessage, Toast.LENGTH_SHORT).show()
+        if (eventState.loadUserError != null) {
+            Toast.makeText(context, loadUserErrorMessage, Toast.LENGTH_SHORT).show()
             viewModel.resetLoadUserError()
         }
     }
@@ -449,7 +449,7 @@ fun AddScreen(
                     description.text.isNotBlank() && !isDescriptionError &&
                     date.text.isNotBlank() && !isDateError &&
                     hour.text.isNotBlank() && !isHourError &&
-                    address.text.isNotBlank() && !isAddressError
+                    address.text.isNotBlank() && !isAddressError && eventImage != null
 
             Button(
                 onClick = { triggerAddEvent = true },

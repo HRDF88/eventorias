@@ -58,6 +58,10 @@
     <string name="success_message">Event added successfully</string>
     <string name="success_false_message">Error adding event</string>
 
+    //DetailScreen
+    <string name="error_id">Missing event ID</string>
+    <string name="error_load_event">Error loading event</string>
+
 
 
 </resources>

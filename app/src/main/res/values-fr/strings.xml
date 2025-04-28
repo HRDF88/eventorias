@@ -57,6 +57,10 @@
     <string name="success_message">Événement ajouté avec succès</string>
     <string name="success_false_message">Erreur lors de l\'ajout de l\'événement</string>
 
+    //DetailScreen
+    <string name="error_id">ID d\'événement manquant</string>
+    <string name="error_load_event">Erreur lors du chargement de l\'évènement</string>
+
 
 
 

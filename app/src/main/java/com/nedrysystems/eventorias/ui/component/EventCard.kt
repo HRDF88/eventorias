@@ -3,6 +3,7 @@ package com.nedrysystems.eventorias.ui.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -36,14 +37,15 @@ import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 import com.nedrysystems.eventorias.ui.uiModel.EventUiModel
 
 @Composable
-fun EventCard(eventUi: EventUiModel) {
+fun EventCard(eventUi: EventUiModel, onClick: () -> Unit) {
     ElevatedCard(
         colors = CardDefaults.cardColors(containerColor = GraysEventoriasField),
         modifier = Modifier
             .fillMaxWidth()
             .padding(1.dp)
             .wrapContentHeight()
-            .wrapContentWidth(),
+            .wrapContentWidth()
+            .clickable(onClick = onClick),
 
 
         ) {

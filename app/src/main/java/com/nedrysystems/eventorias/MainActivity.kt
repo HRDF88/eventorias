@@ -20,14 +20,17 @@ import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService
 import com.nedrysystems.eventorias.ui.addScreen.AddScreen
 import com.nedrysystems.eventorias.ui.authScreen.AuthScreen
+import com.nedrysystems.eventorias.ui.detailScreen.DetailScreen
 import com.nedrysystems.eventorias.ui.eventListScreen.EventListScreen
 import com.nedrysystems.eventorias.ui.homeScreen.HomeScreen
 import com.nedrysystems.eventorias.ui.theme.EventoriasTheme
@@ -148,6 +151,17 @@ fun NavHostApp() {
                 AddScreen(navController = navController, viewModel = hiltViewModel())
             }
 
+            composable(
+                route = "detail/{eventId}",
+                arguments = listOf(
+                    navArgument("eventId") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                DetailScreen(navController = navController)
+            }
         }
+
     }
 }

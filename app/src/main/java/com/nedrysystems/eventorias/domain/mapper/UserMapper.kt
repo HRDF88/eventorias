@@ -1,12 +1,7 @@
 package com.nedrysystems.eventorias.domain.mapper
 
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
-import coil.compose.rememberImagePainter
 import com.google.firebase.auth.FirebaseUser
-import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.domain.model.User
-import com.nedrysystems.eventorias.ui.uiModel.UserUiModel
 
 fun FirebaseUser.toDomainUser(): User {
     return User(

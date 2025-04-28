@@ -10,6 +10,7 @@ plugins {
 
 
 }
+
 // Charger les propriétés du fichier local.properties
 val localProperties = Properties().apply {
     val localPropertiesFile = rootProject.file("local.properties")
@@ -22,6 +23,7 @@ val localProperties = Properties().apply {
 val apiKey: String? = localProperties.getProperty("google_api_key")
 
 android {
+
     namespace = "com.nedrysystems.eventorias"
     compileSdk = 35
 
@@ -37,7 +39,7 @@ android {
             useSupportLibrary = true
         }
 
-        //buildConfigField("String","google_api_key","\"$apiKey\"")
+        buildConfigField("String", "GOOGLE_API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
@@ -72,6 +74,7 @@ android {
     }
 }
 
+
 dependencies {
     // Core AndroidX
     implementation(libs.androidx.core.ktx)
@@ -98,7 +101,9 @@ dependencies {
     implementation("androidx.browser:browser:1.6.0")
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
-
+    //maps
+    // Google maps Compose
+    implementation("com.google.maps.android:maps-compose:4.3.3")
 
     // Firebase UI Auth
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")

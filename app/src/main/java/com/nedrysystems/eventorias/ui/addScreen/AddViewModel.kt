@@ -58,7 +58,7 @@ class AddViewModel @Inject constructor(
 
                 if (event != null) {
                     Log.d("AddViewModel", "Event mappé avec succès : $event")
-                    eventUseCases.addEvent(event).collect { result ->
+                    eventUseCases.addEvent(event).collect {
                         Log.d("AddViewModel", "Ajout terminé avec succès")
                         _uiState.value = _uiState.value.copy(
                             isLoading = false,
@@ -92,7 +92,7 @@ class AddViewModel @Inject constructor(
                 Log.d("AddEventViewModel", "Loading user...")
                 val user = userUseCases.getCurrentUser()
                 Log.d("AddEventViewModel", "User loaded: $user")
-                val userUiModel = user // tu peux le mapper ici si nécessaire
+                val userUiModel = user
                 _uiState.value = _uiState.value.copy(user = userUiModel)
             } catch (e: Exception) {
                 Log.e("AddEventViewModel", "Error loading user", e)
