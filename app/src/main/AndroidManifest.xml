@@ -45,9 +45,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <service
-            android:name=".data.webService.firebase.MyFirebaseMessagingService"
+            android:name="com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

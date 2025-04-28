@@ -3,6 +3,7 @@ package com.nedrysystems.eventorias
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -27,7 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.firebase.ui.auth.IdpResponse
 import com.google.firebase.auth.FirebaseAuth
-import com.nedrysystems.eventorias.data.webService.firebase.MyFirebaseMessagingService
+import com.google.firebase.messaging.FirebaseMessaging
 import com.nedrysystems.eventorias.ui.addScreen.AddScreen
 import com.nedrysystems.eventorias.ui.authScreen.AuthScreen
 import com.nedrysystems.eventorias.ui.detailScreen.DetailScreen
@@ -36,16 +37,16 @@ import com.nedrysystems.eventorias.ui.homeScreen.HomeScreen
 import com.nedrysystems.eventorias.ui.theme.EventoriasTheme
 import com.nedrysystems.eventorias.ui.userProfileScreen.UserProfileScreen
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    @Inject
-    lateinit var myFirebaseMessagingService: MyFirebaseMessagingService
 
-    private val REQUEST_CODE_PERMISSIONS = 1001
+
+    private val REQUEST_CODE_READ_IMAGE = 1001
+    private val REQUEST_CODE_POST_NOTIFS = 1002
 
     private lateinit var signInLauncher: ActivityResultLauncher<Intent>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,9 +75,26 @@ class MainActivity : ComponentActivity() {
             ActivityCompat.requestPermissions(
                 this,
                 arrayOf(Manifest.permission.READ_MEDIA_IMAGES),
-                REQUEST_CODE_PERMISSIONS
+                REQUEST_CODE_READ_IMAGE
             )
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                REQUEST_CODE_POST_NOTIFS
+            )
+        }
+
+
+
+
 
         setContent {
             EventoriasTheme {
@@ -88,16 +106,18 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        myFirebaseMessagingService.fireBaseMessaging.token
+        FirebaseMessaging.getInstance().token
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token = task.result
                     Log.d("FCM", "Token récupéré : $token")
+                    // → ici tu peux appeler ta repo pour l'envoyer au serveur
                 } else {
-                    Log.e("FCM", "Erreur lors de la récupération du token", task.exception)
+                    Log.e("FCM", "Erreur de récupération du token", task.exception)
                 }
             }
     }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -106,49 +126,74 @@ class MainActivity : ComponentActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        if (requestCode == REQUEST_CODE_PERMISSIONS) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // La permission a été accordée, vous pouvez maintenant accéder aux images
-                Log.d("Permissions", "Permission granted for READ_MEDIA_IMAGES")
-            } else {
-                // La permission a été refusée, vous ne pouvez pas accéder aux images
-                Toast.makeText(this, "Permission denied", Toast.LENGTH_SHORT).show()
+        when (requestCode) {
+            REQUEST_CODE_READ_IMAGE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permissions", "Permission accordée pour READ_MEDIA_IMAGES")
+                } else {
+                    Toast.makeText(this, "Permission READ_MEDIA_IMAGES refusée", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            REQUEST_CODE_POST_NOTIFS -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d("Permissions", "Permission accordée pour POST_NOTIFICATIONS")
+                } else {
+                    Toast.makeText(
+                        this,
+                        "Permission POST_NOTIFICATIONS refusée",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         }
     }
 }
 
 
-@Composable
-fun NavHostApp() {
-    val navController = rememberNavController()
+    @Composable
+    fun NavHostApp() {
+        val navController = rememberNavController()
 
-    Scaffold { innerPadding ->
+        Scaffold { innerPadding ->
 
-        NavHost(
-            navController = navController,
-            startDestination = "login",
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = "login") {
-                AuthScreen(navController = navController)
-            }
-            composable("home") {
-                HomeScreen(navController = navController)
-            }
-            composable("event") {
-                EventListScreen(
-                    navController = navController,
-                    viewModel = hiltViewModel()
-                )
+            NavHost(
+                navController = navController,
+                startDestination = "login",
+                modifier = Modifier.padding(innerPadding)
+            ) {
+                composable(route = "login") {
+                    AuthScreen(navController = navController)
+                }
+                composable("home") {
+                    HomeScreen(navController = navController)
+                }
+                composable("event") {
+                    EventListScreen(
+                        navController = navController,
+                        viewModel = hiltViewModel()
+                    )
 
-            }
-            composable("profile") {
-                UserProfileScreen()
-            }
+                }
+                composable("profile") {
+                    UserProfileScreen()
+                }
 
-            composable(route = "add") {
-                AddScreen(navController = navController, viewModel = hiltViewModel())
+                composable(route = "add") {
+                    AddScreen(navController = navController, viewModel = hiltViewModel())
+                }
+
+                composable(
+                    route = "detail/{eventId}",
+                    arguments = listOf(
+                        navArgument("eventId") {
+                            type = NavType.StringType
+                        }
+                    )
+                ) {
+                    DetailScreen(navController = navController)
+                }
             }
 
             composable(
@@ -164,4 +209,3 @@ fun NavHostApp() {
         }
 
     }
-}

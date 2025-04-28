@@ -46,8 +46,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         Log.d("FCM", "Nouveau token : $token")
 
-        // Save the new token locally or send it to your server
-        sendTokenToServer(token)
+
+
     }
 
     /**
@@ -58,10 +58,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
      */
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
+        Log.d("FCM", "Message reçu data=${remoteMessage.data}")
         // Check if the message contains a notification
         remoteMessage.notification?.let {
             showNotification(it.title ?: "Notification", it.body ?: "")
+
         }
     }
 
