@@ -53,7 +53,6 @@ fun EventListScreen(
     val errorMessage = eventState.error?.let { stringResource(id = it) } ?: ""
     val context = LocalContext.current
     val searchQuery by viewModel.searchQuery.collectAsState()
-    val sortDescending by viewModel.sortDescending.collectAsState()
     var isSearchVisible by remember { mutableStateOf(false) }
 
     SideEffect {

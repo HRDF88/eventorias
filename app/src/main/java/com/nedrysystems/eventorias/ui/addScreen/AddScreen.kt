@@ -147,7 +147,6 @@ fun AddScreen(
 
         isSubmitting = true
 
-        // Attendre que l'utilisateur soit chargé
         snapshotFlow { viewModel.uiState.value.user }
             .filterNotNull()
             .first()
@@ -168,7 +167,6 @@ fun AddScreen(
                 .first()
                 .let { state ->
                     if (state.success) {
-                        delay(1000)
                         navController.popBackStack()
                     }
                     viewModel.resetMessage()

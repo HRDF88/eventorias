@@ -59,11 +59,27 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
         Log.d("FCM", "Message reçu data=${remoteMessage.data}")
-        // Check if the message contains a notification
-        remoteMessage.notification?.let {
-            showNotification(it.title ?: "Notification", it.body ?: "")
 
+        // Vérifier si les notifications sont activées dans les préférences locales
+        val isNotificationsEnabled = isNotificationEnabledLocally()
+
+        // Si les notifications sont désactivées localement, on ne montre pas la notification
+        if (isNotificationsEnabled) {
+            // Si le message contient une notification
+            remoteMessage.notification?.let {
+                showNotification(it.title ?: "Notification", it.body ?: "")
+            }
+        } else {
+            Log.d("FCM", "Notifications désactivées, pas de notification affichée.")
         }
+    }
+
+    /**
+     * Fonction pour lire l'état de la notification à partir des préférences locales.
+     */
+    private fun isNotificationEnabledLocally(): Boolean {
+        val prefs = applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
+        return prefs.getBoolean("notifications_enabled", true)  // true par défaut si pas trouvé
     }
 
     /**
