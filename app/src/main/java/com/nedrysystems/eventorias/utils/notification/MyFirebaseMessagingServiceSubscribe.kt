@@ -6,7 +6,7 @@ import com.nedrysystems.eventorias.utils.serviceInterface.FCMSubscriptionManager
 
 object MyFirebaseMessagingServiceSubscribe : FCMSubscriptionManager{
 
-    private const val TOPIC_NEWS = "news"
+    private const val TOPIC_NEWS = "FCM_DEFAULT_CHANNEL"
 
     override fun subscribeToNotifications() {
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NEWS)

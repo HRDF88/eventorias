@@ -65,6 +65,7 @@ class AddViewModel @Inject constructor(
                             success = true,
                             message = R.string.success_message
                         )
+                        Log.d("AddViewModel", "Message après succès : ${_uiState.value.message}")
                     }
                 } else {
                     Log.w("AddViewModel", "submitEventForm: Event null après mapping")

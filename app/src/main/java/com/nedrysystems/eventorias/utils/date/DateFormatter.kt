@@ -30,7 +30,7 @@ object DateFormatter {
 
     fun isValidDate(dateStr: String): Boolean {
         return try {
-            val formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy")
+            val formatter = DateTimeFormatter.ofPattern("MM/dd/uuuu")
                 .withResolverStyle(ResolverStyle.STRICT)
             LocalDate.parse(dateStr, formatter)
             true

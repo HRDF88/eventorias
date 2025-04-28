@@ -152,49 +152,49 @@ class MainActivity : ComponentActivity() {
 }
 
 
-    @Composable
-    fun NavHostApp() {
-        val navController = rememberNavController()
+@Composable
+fun NavHostApp() {
+    val navController = rememberNavController()
 
-        Scaffold { innerPadding ->
+    Scaffold { innerPadding ->
 
-            NavHost(
-                navController = navController,
-                startDestination = "login",
-                modifier = Modifier.padding(innerPadding)
-            ) {
-                composable(route = "login") {
-                    AuthScreen(navController = navController)
-                }
-                composable("home") {
-                    HomeScreen(navController = navController)
-                }
-                composable("event") {
-                    EventListScreen(
-                        navController = navController,
-                        viewModel = hiltViewModel()
-                    )
-
-                }
-                composable("profile") {
-                    UserProfileScreen()
-                }
-
-                composable(route = "add") {
-                    AddScreen(navController = navController, viewModel = hiltViewModel())
-                }
-
-                composable(
-                    route = "detail/{eventId}",
-                    arguments = listOf(
-                        navArgument("eventId") {
-                            type = NavType.StringType
-                        }
-                    )
-                ) {
-                    DetailScreen(navController = navController)
-                }
+        NavHost(
+            navController = navController,
+            startDestination = "login",
+            modifier = Modifier.padding(innerPadding)
+        ) {
+            composable(route = "login") {
+                AuthScreen(navController = navController)
             }
+            composable("home") {
+                HomeScreen(navController = navController)
+            }
+            composable("event") {
+                EventListScreen(
+                    navController = navController,
+                    viewModel = hiltViewModel()
+                )
+
+            }
+            composable("profile") {
+                UserProfileScreen()
+            }
+
+            composable(route = "add") {
+                AddScreen(navController = navController, viewModel = hiltViewModel())
+            }
+
+            composable(
+                route = "detail/{eventId}",
+                arguments = listOf(
+                    navArgument("eventId") {
+                        type = NavType.StringType
+                    }
+                )
+            ) {
+                DetailScreen(navController = navController)
+            }
+
 
             composable(
                 route = "detail/{eventId}",
@@ -209,3 +209,5 @@ class MainActivity : ComponentActivity() {
         }
 
     }
+}
+

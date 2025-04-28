@@ -51,9 +51,12 @@ import com.nedrysystems.eventorias.ui.component.PhotoPickerComposable
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 import com.nedrysystems.eventorias.utils.date.DateFormatter
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -73,6 +76,7 @@ fun AddScreen(
     val loadUserErrorMessage = eventState.loadUserError?.let {
         stringResource(id = it)
     } ?: ""
+
 
     val context = LocalContext.current
 
@@ -129,12 +133,51 @@ fun AddScreen(
 
 
     //Field pattern
-    val datePattern = Regex("""^(0[1-9]|1[0-2])/([0][1-9]|[12][0-9]|3[01])/([0-9]{4})$""")
+    val datePattern = Regex("""^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/([0-9]{4})$""")
     val hourPattern = Regex("""^([01][0-9]|2[0-3]):[0-5][0-9]$""")
 
 
     //Trigger
     var triggerAddEvent by remember { mutableStateOf(false) }
+    var isSubmitting by remember { mutableStateOf(false) }
+
+    val triggerAddEventLambda: suspend () -> Unit = triggerAddEventLambda@{
+
+        if (isSubmitting) return@triggerAddEventLambda
+
+        isSubmitting = true
+
+        // Attendre que l'utilisateur soit chargé
+        snapshotFlow { viewModel.uiState.value.user }
+            .filterNotNull()
+            .first()
+            .let {
+                viewModel.submitEventForm(
+                    date = date.text,
+                    hour = hour.text,
+                    title = title.text,
+                    description = description.text,
+                    address = address.text,
+                    eventPicture = eventImage
+                )
+            }
+
+        withContext(Dispatchers.Main) {
+            viewModel.uiState
+                .filter { it.success || it.message != null }
+                .first()
+                .let { state ->
+                    if (state.success) {
+                        delay(1000)
+                        navController.popBackStack()
+                    }
+                    viewModel.resetMessage()
+                }
+        }
+
+        isSubmitting = false
+        triggerAddEvent = false
+    }
 
 
 
@@ -146,6 +189,10 @@ fun AddScreen(
 
         if (eventState.loadUserError != null) {
             Toast.makeText(context, loadUserErrorMessage, Toast.LENGTH_SHORT).show()
+            viewModel.resetLoadUserError()
+        }
+        if (eventState.message != null) {
+            Toast.makeText(context, addMessage, Toast.LENGTH_SHORT).show()
             viewModel.resetLoadUserError()
         }
     }
@@ -453,7 +500,7 @@ fun AddScreen(
 
             Button(
                 onClick = { triggerAddEvent = true },
-                enabled = isFormValid,
+                enabled = isFormValid && !isSubmitting,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
                     contentColor = Color.White
@@ -472,35 +519,7 @@ fun AddScreen(
     }
     LaunchedEffect(triggerAddEvent) {
         if (triggerAddEvent) {
-            triggerAddEvent = false
-
-
-            snapshotFlow { viewModel.uiState.value.user }
-                .filterNotNull()
-                .first()
-                .let {
-                    viewModel.submitEventForm(
-                        date = date.text,
-                        hour = hour.text,
-                        title = title.text,
-                        description = description.text,
-                        address = address.text,
-                        eventPicture = eventImage
-                    )
-                }
-
-            viewModel.uiState
-                .filter { it.success || it.message != null }
-                .first()
-                .let { state ->
-                    if (state.success) {
-                        navController.popBackStack()
-                    } else if (state.message != null) {
-                        Toast.makeText(context, addMessage, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    viewModel.resetMessage()
-                }
+            triggerAddEventLambda()
 
 
         }
