@@ -28,7 +28,7 @@ class UserProfileViewModel @Inject constructor(
         loadUser()
     }
 
-    private fun loadUser() {
+    fun loadUser() {
         viewModelScope.launch {
             _uiState.value = UserProfileUiState(isLoading = true)
             try {

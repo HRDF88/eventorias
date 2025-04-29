@@ -16,7 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TextFieldDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -42,6 +41,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.ErrorComposable
+import com.nedrysystems.eventorias.ui.component.LoadingEventorias
 import com.nedrysystems.eventorias.ui.component.NotificationSwapButton
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
@@ -70,7 +70,7 @@ fun UserProfileScreen(
 
 
     if (userState.isLoading) {
-        CircularProgressIndicator()
+        LoadingEventorias()
     }
 
     SideEffect {
@@ -79,7 +79,7 @@ fun UserProfileScreen(
         }
     }
     if (user == null) {
-        ErrorComposable(onTryAgainClick = {})
+        ErrorComposable(onTryAgainClick = { viewModel.loadUser() })
         return
     }
     Scaffold(
@@ -209,7 +209,10 @@ fun UserProfileScreen(
                             AccessibilityAnnouncer.announce(context, notificationDescription)
                         })
 
-                    Text(text = stringResource(R.string.notification), color = Color.White, modifier = Modifier.semantics { contentDescription= ""})
+                    Text(
+                        text = stringResource(R.string.notification),
+                        color = Color.White,
+                        modifier = Modifier.semantics { contentDescription = "" })
                 }
             }
         }

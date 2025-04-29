@@ -25,6 +25,8 @@
     //EventListScreen
     <string name="event_list_tittle">Event List</string>
     <string name="search">Search for an event</string>
+    <string name="no_events_to_display">No events to display</string>
+
 
     <string name="sort_order_chronological">Sort in chronological order</string>
     <string name="sort_order_reverse_chronological">Sort in reverse chronological order</string>

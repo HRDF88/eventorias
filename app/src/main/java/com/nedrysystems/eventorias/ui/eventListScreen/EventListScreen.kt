@@ -40,7 +40,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.nedrysystems.eventorias.R
+import com.nedrysystems.eventorias.ui.component.ErrorComposable
 import com.nedrysystems.eventorias.ui.component.EventCard
+import com.nedrysystems.eventorias.ui.component.LoadingEventorias
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.utils.accessibility.AccessibilityAnnouncer
 
@@ -161,12 +163,7 @@ fun EventListScreen(
             }
 
             if (eventState.isLoading) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                LoadingEventorias()
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -181,6 +178,15 @@ fun EventListScreen(
                             onClick = { navController.navigate("detail/${event.id}") })
                     }
                 }
+            }
+            if (eventState.events == null) {
+                ErrorComposable { viewModel.loadAllEvents() }
+            }
+            if (eventState.events.isEmpty()) {
+                Text(
+                    text = stringResource(R.string.no_events_to_display),
+                    color = Color.White
+                )
             }
         }
     }

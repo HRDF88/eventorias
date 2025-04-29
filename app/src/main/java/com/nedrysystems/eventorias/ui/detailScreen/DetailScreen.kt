@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.ErrorComposable
 import com.nedrysystems.eventorias.ui.component.EventDetailContent
+import com.nedrysystems.eventorias.ui.component.LoadingEventorias
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,14 +85,14 @@ fun DetailScreen(
             ) {
                 when {
                     uiState.isLoading -> {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                        LoadingEventorias()
                     }
 
                     uiState.event != null -> {
                         EventDetailContent(event = event)
                     }
 
-                    uiState.event == null ->{
+                    uiState.event == null -> {
                         ErrorComposable { viewModel.retry() }
                     }
                 }
