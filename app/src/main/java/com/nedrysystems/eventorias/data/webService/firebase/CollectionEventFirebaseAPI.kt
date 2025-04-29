@@ -13,13 +13,26 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-
+/**
+ * Firebase implementation of [EventApi] using Firestore as the backend.
+ *
+ * This class handles adding, retrieving, and observing event documents in a Firestore collection.
+ *
+ * @property firestore The [FirebaseFirestore] instance used to access Firestore.
+ */
 class CollectionEventFirebaseAPI @Inject constructor(
     private val firestore: FirebaseFirestore
 ) : EventApi {
 
     private val eventCollection = firestore.collection("Event")
 
+
+    /**
+     * Adds a new [Event] to Firestore.
+     *
+     * @param event The [Event] to add.
+     * @return A [Flow] that emits the added [Event] once it has been saved.
+     */
     override fun add(event: Event): Flow<Event> = callbackFlow {
         try {
             val docRef = eventCollection.document(event.id)
@@ -28,9 +41,15 @@ class CollectionEventFirebaseAPI @Inject constructor(
         } catch (e: Exception) {
             close(e)
         }
-        awaitClose {  }
+        awaitClose { }
     }
 
+    /**
+     * Retrieves a single [Event] by its unique ID.
+     *
+     * @param id The ID of the event to retrieve.
+     * @return A [Flow] that emits the [Event] each time it is updated in Firestore.
+     */
     override fun getEventById(id: String): Flow<Event> = callbackFlow {
         val listener = eventCollection.document(id)
             .addSnapshotListener { snapshot, error ->
@@ -43,12 +62,19 @@ class CollectionEventFirebaseAPI @Inject constructor(
         awaitClose { listener.remove() }
     }
 
+    /**
+     * Retrieves all [Event]s that match a given title and optionally orders them by timestamp.
+     *
+     * @param tittle The title to filter by. If blank, no filtering is applied.
+     * @param orderByTimestamp Whether to order results by timestamp. Defaults to `null`.
+     * @return A [Flow] that emits the list of matching [Event]s and updates when data changes.
+     */
     override fun getAllEvent(tittle: String, orderByTimestamp: Boolean?): Flow<List<Event>> =
         callbackFlow {
             var query = eventCollection
                 .apply {
                     if (tittle.isNotBlank()) {
-                        whereEqualTo("tittle", tittle) // Filtre uniquement si le titre est non vide
+                        whereEqualTo("tittle", tittle)
                     }
                 }
 
@@ -58,7 +84,11 @@ class CollectionEventFirebaseAPI @Inject constructor(
 
             val listener = query.addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Log.e("CollectionEventFirebaseAPI", "Error fetching events: ${error.message}", error)
+                    Log.e(
+                        "CollectionEventFirebaseAPI",
+                        "Error fetching events: ${error.message}",
+                        error
+                    )
                     close(error)
                     return@addSnapshotListener
                 }
@@ -68,7 +98,10 @@ class CollectionEventFirebaseAPI @Inject constructor(
 
             awaitClose {
                 listener.remove()
-                Log.d("CollectionEventFirebaseAPI", "Listener removed for events with title: $tittle")
+                Log.d(
+                    "CollectionEventFirebaseAPI",
+                    "Listener removed for events with title: $tittle"
+                )
             }
         }
 

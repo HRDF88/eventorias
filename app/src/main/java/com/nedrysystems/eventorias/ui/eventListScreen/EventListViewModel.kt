@@ -18,6 +18,14 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for managing the state of the event list screen.
+ *
+ * It handles loading, filtering, and sorting of events, and exposes a [StateFlow] of [EventListUiState]
+ * for UI observation using Jetpack Compose or other reactive UI frameworks.
+ *
+ * @property eventUseCases A container of use cases related to events (e.g., fetching all events).
+ */
 @HiltViewModel
 class EventListViewModel @Inject constructor(
     private val eventUseCases: EventUseCases
@@ -33,6 +41,10 @@ class EventListViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(true)
     private val _error = MutableStateFlow<Int?>(null)
 
+    /**
+     * Combined UI state including loading state, filtered and sorted events,
+     * and possible errors.
+     */
     val uiState: StateFlow<EventListUiState> = combine(
         _events, _searchQuery, _sortDescending, _isLoading, _error
     ) { events, query, descending, isLoading, error ->
@@ -53,14 +65,24 @@ class EventListViewModel @Inject constructor(
         )
     }.stateIn(viewModelScope, SharingStarted.Eagerly, EventListUiState(isLoading = true))
 
+    /**
+     * Updates the current search query for filtering the event list.
+     */
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
     }
 
+    /**
+     * Toggles the sort order between ascending and descending based on the event timestamp.
+     */
     fun toggleSortOrder() {
         _sortDescending.value = !_sortDescending.value
     }
 
+    /**
+     * Loads all events from the repository and updates the internal state.
+     * In case of error, sets an error resource ID.
+     */
     @OptIn(UnstableApi::class)
     fun loadAllEvents() {
         viewModelScope.launch {

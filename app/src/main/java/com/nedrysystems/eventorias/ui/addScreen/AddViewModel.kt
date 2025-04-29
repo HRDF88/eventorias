@@ -14,6 +14,19 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel for handling event creation logic and managing UI state during the process.
+ *
+ * This ViewModel coordinates the user interaction with event-related use cases and handles
+ * the mapping of event data. It manages the UI state for event submission, including loading states,
+ * success or failure messages, and user data.
+ *
+ * @property eventUseCases The [EventUseCases] instance for interacting with event-related use cases.
+ * @property eventMapper The [EventMapper] instance for mapping form data to an [Event] object.
+ * @property userUseCases The [UserUseCases] instance for interacting with user-related use cases.
+ * @property _uiState A mutable state flow that holds the UI state for the event creation process.
+ * @property uiState A public, immutable state flow for observing the UI state.
+ */
 @HiltViewModel
 class AddViewModel @Inject constructor(
     private val eventUseCases: EventUseCases,
@@ -24,6 +37,21 @@ class AddViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AddUiState())
     val uiState: StateFlow<AddUiState> = _uiState
 
+    /**
+     * Submits the event form by mapping the form data to an [Event] and triggering the event creation.
+     *
+     * This function is responsible for:
+     * - Mapping the form data to an [Event] object.
+     * - Checking if the user's profile picture is available.
+     * - Calling the use case to add the event and updating the UI state accordingly.
+     *
+     * @param date The date of the event.
+     * @param hour The hour of the event.
+     * @param title The title of the event.
+     * @param description The description of the event.
+     * @param address The address of the event.
+     * @param eventPicture An optional [Bitmap] representing the event's picture.
+     */
     fun submitEventForm(
         date: String,
         hour: String,
@@ -86,7 +114,12 @@ class AddViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Loads the current user from the user use cases.
+     *
+     * This function retrieves the current user and updates the UI state accordingly. If there
+     * is an error loading the user, it updates the UI state to indicate the error.
+     */
     fun loadUser() {
         viewModelScope.launch {
             try {
@@ -103,10 +136,20 @@ class AddViewModel @Inject constructor(
         }
     }
 
-
+    /**
+     * Resets the success or failure message in the UI state.
+     *
+     * This function is useful to clear any displayed message after it has been shown to the user.
+     */
     fun resetMessage() {
         _uiState.value = _uiState.value.copy(message = null)
     }
+
+    /**
+     * Resets the load user error in the UI state.
+     *
+     * This function is used to clear the load user error message after resolving the issue.
+     */
     fun resetLoadUserError() {
         _uiState.value = _uiState.value.copy(loadUserError = null)
     }

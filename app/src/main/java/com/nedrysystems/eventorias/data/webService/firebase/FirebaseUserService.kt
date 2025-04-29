@@ -19,7 +19,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
-
+/**
+ * Implementation of [UserApi] that integrates Firebase Authentication and Firestore.
+ *
+ * This class handles user sign-in, sign-out, user data management, and notification preferences
+ * using Firebase services.
+ */
 class FirebaseUserService : UserApi {
 
 
@@ -29,7 +34,11 @@ class FirebaseUserService : UserApi {
     private val firestore = FirebaseFirestore.getInstance()
     private val usersCollection = firestore.collection("User")
 
-
+    /**
+     * Callback for handling the result of the sign-in intent.
+     *
+     * @param result The result from the Firebase Auth UI.
+     */
     override fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         Log.d("AuthUI", "onSignInResult called with resultCode: ${result.resultCode}")
         if (result.resultCode == Activity.RESULT_OK) {
@@ -42,7 +51,12 @@ class FirebaseUserService : UserApi {
         }
     }
 
-
+    /**
+     * Launches the sign-in process using the given activity result launcher.
+     *
+     * @param launcher An [ActivityResultLauncher] used to launch the Firebase Auth UI.
+     * @return The signed-in [User], or null if the sign-in was cancelled or failed.
+     */
     override suspend fun signIn(launcher: ActivityResultLauncher<Intent>): User? {
         if (signInDeferred != null && !signInDeferred!!.isCompleted) {
             throw IllegalStateException("Sign-in already in progress.")
@@ -65,18 +79,32 @@ class FirebaseUserService : UserApi {
         return firebaseUser?.toDomainUser()
     }
 
+    /**
+     * Signs the current user out of Firebase.
+     */
     override fun signOut() {
         auth.signOut()
     }
 
+    /**
+     * Returns the currently signed-in [User], or null if not signed in.
+     */
     override fun getCurrentUser(): User? {
         return auth.currentUser?.toDomainUser()
     }
 
+    /**
+     * Checks whether a user is currently signed in.
+     *
+     * @return `true` if a user is logged in, `false` otherwise.
+     */
     override fun isUserLoggedIn(): Boolean {
         return auth.currentUser != null
     }
 
+    /**
+     * Inserts the current signed-in user into Firestore if they do not already exist.
+     */
     override fun insertCurrentUser() {
         val firebaseUser = auth.currentUser ?: return
 
@@ -102,6 +130,11 @@ class FirebaseUserService : UserApi {
         }
     }
 
+    /**
+     * Enables or disables notifications for the current user.
+     *
+     * @param enable `true` to enable notifications, `false` to disable them.
+     */
     override fun setNotificationEnable(enable: Boolean) {
         val uid = auth.currentUser?.uid ?: return
 
@@ -116,6 +149,11 @@ class FirebaseUserService : UserApi {
             }
     }
 
+    /**
+     * Loads and observes the current user's data from Firestore.
+     *
+     * @return A [Flow] that emits updates to the current user's data.
+     */
     override fun loadUser(): Flow<User> = callbackFlow {
         val uid = auth.currentUser?.uid
         if (uid == null) {
@@ -137,6 +175,12 @@ class FirebaseUserService : UserApi {
         awaitClose { listener.remove() }
     }
 
+    /**
+     * Retrieves the notification preference of the specified user.
+     *
+     * @param userId The ID of the user.
+     * @return `true` if notifications are enabled, `false` otherwise. Defaults to `true` if the field is missing.
+     */
     override suspend fun getNotificationSetting(userId: String): Boolean {
         val userRef = usersCollection.document(userId)
         val snapshot = userRef.get().await()

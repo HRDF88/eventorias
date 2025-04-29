@@ -17,6 +17,17 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for managing the UI state of the event detail screen.
+ *
+ * It loads the event data using the provided event ID from the navigation arguments
+ * and exposes it as a [StateFlow] of [DetailUiState]. It also handles retries and error resets.
+ *
+ * @param eventUseCases Use cases for retrieving events from the repository.
+ * @param savedStateHandle Handle to access saved state and navigation arguments, notably the "eventId".
+ *
+ * @constructor Initializes the ViewModel and loads the event using the event ID.
+ */
 @HiltViewModel
 class DetailViewModel @Inject constructor(
     private val eventUseCases: EventUseCases,
@@ -36,22 +47,34 @@ class DetailViewModel @Inject constructor(
         loadEvent(eventId)
     }
 
+    /**
+     * Retries loading the event using the stored [eventId].
+     */
     fun retry() {
         loadEvent(eventId)
     }
 
+    /**
+     * Resets any displayed error message.
+     */
     fun resetMessage() {
         _uiState.value = _uiState.value.copy(error = null)
     }
 
-     private fun loadEvent(id: String) {
+    /**
+     * Loads the event by its ID and updates the UI state accordingly.
+     *
+     * @param id The ID of the event to load.
+     */
+    private fun loadEvent(id: String) {
         viewModelScope.launch {
             eventUseCases.getEventById(id)
                 .onStart {
                     _uiState.value = _uiState.value.copy(isLoading = true, error = null)
                 }
                 .onEach { fetchedEvent ->
-                    _uiState.value = DetailUiState(event = fetchedEvent.toUiModel(), isLoading = false)
+                    _uiState.value =
+                        DetailUiState(event = fetchedEvent.toUiModel(), isLoading = false)
                 }
                 .catch {
                     _uiState.value = DetailUiState(error = R.string.error_load_event)

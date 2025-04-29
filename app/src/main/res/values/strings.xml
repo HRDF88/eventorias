@@ -20,14 +20,12 @@
     <string name="email_sign_in">Sign in with email</string>
     <string name="auth_error_connection">Sign-in failed.</string>
 
-    //Content description Auth Screen
 
     //EventListScreen
     <string name="event_list_tittle">Event List</string>
     <string name="search">Search for an event</string>
     <string name="no_events_to_display">No events to display</string>
-
-
+        //Accessibility
     <string name="sort_order_chronological">Sort in chronological order</string>
     <string name="sort_order_reverse_chronological">Sort in reverse chronological order</string>
     <string name="sorted_chronological">Events are now sorted in chronological order</string>
@@ -38,8 +36,6 @@
     <string name="search_announcement_close">Search is now hidden</string>
 
 
-
-
     //UserProfileScreen
     <string name="user_profile_tittle">User profile</string>
     <string name="name">Name</string>
@@ -47,7 +43,7 @@
     <string name="error_load_user">Error to load user profile</string>
     <string name="error_update_notification">Error updating notification setting</string>
     <string name="notification">Notification</string>
-
+        //Accessibility
     <string name="user_name_is">The user\'s name is: %1$s</string>
     <string name="user_email_is">The user\'s email is: %1$s</string>
     <string name="notifications_enabled">Notifications enabled</string>
@@ -71,7 +67,7 @@
     <string name="address">Address</string>
     <string name="label_address">Enter full address</string>
     <string name="validate">Validate</string>
-
+        //Error
     <string name="error_empty_title">Enter the title of event to continue</string>
     <string name="error_empty_description">Enter the description of event to continue</string>
     <string name="error_empty_date">Enter the date of event to continue</string>
@@ -81,7 +77,7 @@
     <string name="error_invalid_hour">Incorrect hour format</string>
     <string name="success_message">Event added successfully</string>
     <string name="success_false_message">Error adding event</string>
-
+        //Accessibility
     <string name="back_button">Back</string>
     <string name="title_field">Title Field</string>
     <string name="description_field">Description Field</string>

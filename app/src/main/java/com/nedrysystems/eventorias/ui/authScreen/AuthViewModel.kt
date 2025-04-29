@@ -2,15 +2,11 @@ package com.nedrysystems.eventorias.ui.authScreen
 
 
 import android.content.Intent
-import android.util.Log
 import androidx.activity.result.ActivityResultLauncher
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
-import com.google.firebase.auth.FirebaseAuth
 import com.nedrysystems.eventorias.R
-import com.nedrysystems.eventorias.domain.mapper.toDomainUser
-import com.nedrysystems.eventorias.domain.mapper.toUiModel
 import com.nedrysystems.eventorias.domain.model.User
 import com.nedrysystems.eventorias.domain.useCase.user.container.UserUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,6 +18,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+/**
+ * ViewModel responsible for handling user authentication state and logic.
+ *
+ * This ViewModel interacts with the domain layer (via [UserUseCases]) to perform operations
+ * such as signing in, processing sign-in results, and initializing the UI state based on
+ * the current user session.
+ *
+ * @property userUseCases A container of all user-related use cases injected via Hilt.
+ */
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val userUseCases: UserUseCases
@@ -32,11 +37,17 @@ class AuthViewModel @Inject constructor(
 
     private var signInDeferred: CompletableDeferred<User?>? = null
 
+    // Initialize the UI state with the currently signed-in user, if available
     init {
         val currentUser = userUseCases.getCurrentUser()
         _uiState.update { it.copy(user = currentUser, isSignedIn = currentUser != null) }
     }
 
+    /**
+     * Handles the result returned by FirebaseUI after the authentication flow.
+     *
+     * @param result The [FirebaseAuthUIAuthenticationResult] returned from FirebaseUI.
+     */
     fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         userUseCases.onSignInResult(result)
 
@@ -60,6 +71,11 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Launches the FirebaseUI sign-in flow.
+     *
+     * @param launcher The [ActivityResultLauncher] to start the FirebaseUI activity.
+     */
     fun signIn(launcher: ActivityResultLauncher<Intent>) {
         if (_uiState.value.isLoading) return
 
@@ -75,7 +91,7 @@ class AuthViewModel @Inject constructor(
                             user = user,
                             isLoading = false,
                             isSignedIn = true,
-                            errorResId =  null
+                            errorResId = null
                         )
                     }
                 } else {
@@ -91,7 +107,7 @@ class AuthViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorResId =  R.string.email_sign_in
+                        errorResId = R.string.email_sign_in
                     )
                 }
             }

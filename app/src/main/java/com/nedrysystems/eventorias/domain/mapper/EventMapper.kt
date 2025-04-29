@@ -13,6 +13,21 @@ import com.nedrysystems.eventorias.utils.serviceInterface.GeolocationService
 import java.util.UUID
 import javax.inject.Inject
 
+/**
+ * Converts an [Event] object into a Firestore-compatible Map.
+ *
+ * @return a [Map] representation of the event with keys matching Firestore field names.
+ *
+ * Fields include:
+ * - "id": unique event identifier
+ * - "tittle": the event title (note: "title" might be more appropriate)
+ * - "description": event description
+ * - "timestamp": the event's date and time in epoch milliseconds
+ * - "picture": base64-encoded event image
+ * - "adresse": textual address of the event
+ * - "cordinateGps": a nested map with "latitude" and "longitude"
+ * - "profilPicture": URL or base64 of the user's profile image
+ */
 fun Event.toFirestoreMap(): Map<String, Any> {
     return mapOf(
         "id" to id,
@@ -30,6 +45,15 @@ fun Event.toFirestoreMap(): Map<String, Any> {
 
 }
 
+
+/**
+ * Converts a Firestore [DocumentSnapshot] into an [Event] object.
+ *
+ * @return the corresponding [Event] or null if the snapshot is empty or missing required fields.
+ *
+ * This function safely extracts:
+ * - ID, title, description, timestamp, images, and GPS coordinates.
+ */
 fun DocumentSnapshot.toEvent(): Event? {
     val data = this.data ?: return null
     val gps = data["cordinateGps"] as? Map<*, *>
@@ -48,6 +72,16 @@ fun DocumentSnapshot.toEvent(): Event? {
     )
 }
 
+/**
+ * Maps an [Event] domain object into a [EventUiModel] for UI display.
+ *
+ * This includes:
+ * - Formatting the timestamp into date and time strings
+ * - Decoding the base64-encoded event image into a [Bitmap]
+ * - Handling image decoding errors with a fallback transparent bitmap
+ *
+ * @return the corresponding [EventUiModel] used in the UI layer.
+ */
 fun Event.toUiModel(): EventUiModel {
 
     val dateFormatted = DateFormatter.formatDate(timestamp)
@@ -80,6 +114,26 @@ fun Event.toUiModel(): EventUiModel {
 }
 
 class EventMapper @Inject constructor(private val geoService: GeolocationService) {
+
+    /**
+     * Maps form data to an [Event] object.
+     *
+     * This method is responsible for constructing an event based on:
+     * - Date and hour string inputs
+     * - Title, description, address, profile picture, and event picture
+     * It also converts the event picture into a base64 string and fetches the GPS coordinates based on the address.
+     *
+     * @param date the date of the event in string format (e.g. "2025-04-29")
+     * @param hour the hour of the event in string format (e.g. "15:30")
+     * @param title the event title
+     * @param description the event description
+     * @param address the address of the event
+     * @param profilPicture the profile picture of the event creator
+     * @param eventPicture the event's image as a [Bitmap]
+     * @return the newly created [Event] object
+     *
+     * @throws IllegalArgumentException if the input data is invalid or cannot be parsed.
+     */
     suspend fun mapFormToEvent(
         date: String,
         hour: String,

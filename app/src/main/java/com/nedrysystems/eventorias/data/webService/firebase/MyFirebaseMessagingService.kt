@@ -32,7 +32,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
         Log.d("FCM", "Nouveau token : $token")
 
-        // Save the new token locally or send it to your server
         sendTokenToServer(token)
     }
 
@@ -47,7 +46,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         Log.d("FCM", "Nouveau token : $token")
 
 
-
     }
 
     /**
@@ -60,12 +58,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onMessageReceived(remoteMessage)
         Log.d("FCM", "Message reçu data=${remoteMessage.data}")
 
-        // Vérifier si les notifications sont activées dans les préférences locales
         val isNotificationsEnabled = isNotificationEnabledLocally()
 
-        // Si les notifications sont désactivées localement, on ne montre pas la notification
         if (isNotificationsEnabled) {
-            // Si le message contient une notification
             remoteMessage.notification?.let {
                 showNotification(it.title ?: "Notification", it.body ?: "")
             }
@@ -75,11 +70,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     /**
-     * Fonction pour lire l'état de la notification à partir des préférences locales.
+     * Function to read the notification status from the local preferences.
      */
     private fun isNotificationEnabledLocally(): Boolean {
         val prefs = applicationContext.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        return prefs.getBoolean("notifications_enabled", true)  // true par défaut si pas trouvé
+        return prefs.getBoolean("notifications_enabled", true)
     }
 
     /**
@@ -109,7 +104,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        // Create notification channel for devices running Android O or higher
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
@@ -119,7 +113,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        // Show the notification
         notificationManager.notify(0, notificationBuilder.build())
     }
 }

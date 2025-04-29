@@ -20,14 +20,12 @@
     <string name="email_sign_in">Connectez-vous avec l\'e-mail</string>
     <string name="auth_error_connection">Échec de la connexion.</string>
 
-    //Content description Auth Screen
 
     //EventListScreen
     <string name="event_list_tittle">Liste des événements</string>
     <string name="search">Rechercher un événement</string>
     <string name="no_events_to_display">Aucun événement à afficher</string>
-
-
+        //Accessibility
     <string name="sort_order_chronological">Trier par ordre chronologique</string>
     <string name="sort_order_reverse_chronological">Trier par ordre déchronologique</string>
     <string name="sorted_chronological">Les événements sont maintenant triés par ordre chronologique</string>
@@ -38,8 +36,6 @@
     <string name="search_announcement_close">La recherche est maintenant masquée</string>
 
 
-
-
     //UserProfileScreen
     <string name="user_profile_tittle">Profil utilisateur</string>
     <string name="name">Nom</string>
@@ -47,7 +43,7 @@
     <string name="error_load_user">Erreur lors du chargement des données de l\'utilisateur</string>
     <string name="error_update_notification">Erreur lors de la mise à jour des paramètres de notification</string>
     <string name="notification">Notification</string>
-
+        //Accessibility
     <string name="user_name_is">Le nom d\'utilisateur est : %1$s</string>
     <string name="user_email_is">Le mail de \'utilisateur est : %1$s</string>
     <string name="notifications_enabled">Notifications activées</string>
@@ -55,8 +51,6 @@
     <string name="toggle_notifications">Activer ou désactiver les notifications</string>
     <string name="notification_enabled">Notification activée</string>
     <string name="notification_disabled">Notification désactivée</string>
-
-
 
     //AddScreen
     <string name="add_tittle">Création d\'un événement</string>
@@ -71,7 +65,7 @@
     <string name="address">Adresse</string>
     <string name="label_address">Entrez l\'adresse complète</string>
     <string name="validate">Valider</string>
-
+        //Error
     <string name="error_empty_title">Entrez le titre de l\'événement pour continuer</string>
     <string name="error_empty_description">Entrez la description de l\'événement pour continuer</string>
     <string name="error_empty_date">Entrez la date de l\'événement pour continuer</string>
@@ -81,7 +75,7 @@
     <string name="error_invalid_hour">Format d\'heure incorrect</string>
     <string name="success_message">Événement ajouté avec succès</string>
     <string name="success_false_message">Erreur lors de l\'ajout de l\'événement</string>
-
+        //Accessibility
     <string name="back_button">Retour</string>
     <string name="title_field">Champ Titre</string>
     <string name="description_field">Champ Description</string>
