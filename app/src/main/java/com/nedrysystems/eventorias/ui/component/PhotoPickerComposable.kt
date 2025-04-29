@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nedrysystems.eventorias.R
@@ -61,6 +63,9 @@ fun PhotoPickerComposable(
             onImageBitmapChanged(resized)
         }
     }
+
+    val photo_picker = stringResource(R.string.photo_picker)
+    val photo_pickerPhoto = stringResource(R.string.photo_pickerPhoto)
 
     // Gallery picker launcher
     val pickMedia = rememberLauncherForActivityResult(
@@ -102,6 +107,7 @@ fun PhotoPickerComposable(
                 ),
                 modifier = Modifier
                     .defaultMinSize(minWidth = 45.dp, minHeight = 45.dp)
+                    .semantics { contentDescription = photo_pickerPhoto }
 
             ) {
                 Icon(
@@ -120,6 +126,7 @@ fun PhotoPickerComposable(
                 ),
                 modifier = Modifier
                     .defaultMinSize(minWidth = 45.dp, minHeight = 45.dp)
+                    .semantics { contentDescription = photo_picker }
             ) {
                 Icon(
                     painter = painterResource(R.drawable.attach_file),
@@ -136,14 +143,14 @@ fun PhotoPickerComposable(
         if (imageBitmap != null) {
             Image(
                 bitmap = imageBitmap.asImageBitmap(),
-                contentDescription = "Selected Image",
+                contentDescription = stringResource(R.string.selected_photo),
                 modifier = Modifier.size(200.dp)
             )
         } else if (resizedBitmap != null) {
 
             Image(
                 bitmap = resizedBitmap!!.asImageBitmap(),
-                contentDescription = "Resized Image",
+                contentDescription = stringResource(R.string.selected_photo),
                 modifier = Modifier.size(200.dp)
             )
         } else {

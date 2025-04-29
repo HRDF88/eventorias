@@ -60,7 +60,7 @@ class UserProfileViewModel @Inject constructor(
             val userId = _uiState.value.user?.id ?: return@launch
 
             try {
-                userUseCases.setNotificationEnable(newState) // Tu continues d'envoyer au serveur
+                userUseCases.setNotificationEnable(newState)
 
                 // Abonner/désabonner FCM
                 if (newState) {
@@ -69,10 +69,9 @@ class UserProfileViewModel @Inject constructor(
                     fcmSubscriptionManager.unsubscribeFromNotifications()
                 }
 
-                // Sauvegarder localement l'état des notifications pour le onMessageReceived
+
                 saveNotificationSettingLocally(newState)
 
-                // Mettre à jour l'UI State
                 _uiState.value = _uiState.value.copy(
                     asNotification = newState,
                     user = _uiState.value.user?.copy(asNotification = newState)

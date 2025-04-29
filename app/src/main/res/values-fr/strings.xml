@@ -47,6 +47,7 @@
     <string name="address">Adresse</string>
     <string name="label_address">Entrez l\'adresse complète</string>
     <string name="validate">Valider</string>
+
     <string name="error_empty_title">Entrez le titre de l\'événement pour continuer</string>
     <string name="error_empty_description">Entrez la description de l\'événement pour continuer</string>
     <string name="error_empty_date">Entrez la date de l\'événement pour continuer</string>
@@ -57,15 +58,29 @@
     <string name="success_message">Événement ajouté avec succès</string>
     <string name="success_false_message">Erreur lors de l\'ajout de l\'événement</string>
 
+    <string name="back_button">Retour</string>
+    <string name="title_field">Champ Titre</string>
+    <string name="description_field">Champ Description</string>
+    <string name="date_field">Champ Date</string>
+    <string name="hour_field">Champ Heure</string>
+    <string name="address_field">Champ Adresse</string>
+    <string name="photo_picker">Sélectionner une photo pour l\'événement</string>
+    <string name="photo_pickerPhoto">Take a photo for the event</string>
+    <string name="validate_button">Valider l\'événement</string>
+    <string name="selected_photo">Image sélectionnée</string>
+
+
     //DetailScreen
     <string name="error_id">ID d\'événement manquant</string>
     <string name="error_load_event">Erreur lors du chargement de l\'évènement</string>
 
-
-
-
-
-
+    //EventDetailContent Accessibility
+    <string name="event_image_description">Image de l\'événement</string>
+    <string name="profile_image_description">Photo de profil de l\'organisateur</string>
+    <string name="event_date_description">Date de l\'événement</string>
+    <string name="event_time_description">Heure de l\'événement</string>
+    <string name="event_description_description">Description de l\'événement</string>
+    <string name="event_address_description">Adresse de l\'événement</string>
 
 
 </resources>

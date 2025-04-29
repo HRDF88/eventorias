@@ -58,10 +58,29 @@
     <string name="success_message">Event added successfully</string>
     <string name="success_false_message">Error adding event</string>
 
+    <string name="back_button">Back</string>
+    <string name="title_field">Title Field</string>
+    <string name="description_field">Description Field</string>
+    <string name="date_field">Date Field</string>
+    <string name="hour_field">Hour Field</string>
+    <string name="address_field">Address Field</string>
+    <string name="photo_pickerPhoto">Take a photo for the event</string>
+    <string name="photo_picker">Select a photo for the event</string>
+    <string name="validate_button">Validate Event</string>
+    <string name="selected_photo">Selected Image</string>
+
+
     //DetailScreen
     <string name="error_id">Missing event ID</string>
     <string name="error_load_event">Error loading event</string>
 
+    //EventDetailContent Accessibility
+    <string name="event_image_description">Event image</string>
+    <string name="profile_image_description">Organizer profile picture</string>
+    <string name="event_date_description">Event date</string>
+    <string name="event_time_description">Event time</string>
+    <string name="event_description_description">Event description</string>
+    <string name="event_address_description">Event address</string>
 
 
 </resources>

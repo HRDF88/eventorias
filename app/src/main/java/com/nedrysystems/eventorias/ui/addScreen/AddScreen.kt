@@ -42,6 +42,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -131,6 +133,15 @@ fun AddScreen(
     val errorInvalidDate = stringResource(R.string.error_invalid_date)
     val errorInvalidHour = stringResource(R.string.error_invalid_hour)
 
+    //Accessibility
+    val backButton = stringResource(R.string.back_button)
+    val title_field = stringResource(R.string.title_field)
+    val description_field = stringResource(R.string.description_field)
+    val date_field = stringResource(R.string.date_field)
+    val hour_field = stringResource(R.string.hour_field)
+    val address_field = stringResource(R.string.address_field)
+    val validate_button = stringResource(R.string.validate_button)
+
 
     //Field pattern
     val datePattern = Regex("""^(0[1-9]|1[0-2])/(0[1-9]|[12][0-9]|3[01])/([0-9]{4})$""")
@@ -202,8 +213,8 @@ fun AddScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
+                            contentDescription = backButton,
+                            tint = Color.White,
                         )
                     }
                 },
@@ -271,7 +282,8 @@ fun AddScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(6.dp))
-                    .padding(14.dp),
+                    .padding(14.dp)
+                    .semantics { contentDescription = title_field },
 
 
                 colors = textFieldPattern
@@ -317,7 +329,8 @@ fun AddScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .padding(14.dp),
+                    .padding(14.dp)
+                    .semantics { contentDescription = description_field },
 
                 colors = textFieldPattern
             )
@@ -383,7 +396,9 @@ fun AddScreen(
                         text = dateErrorMessage,
                         color = textErrorColor,
                         fontSize = 12.sp,
-                        modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                        modifier = Modifier
+                            .padding(start = 8.dp, top = 4.dp)
+                            .semantics { contentDescription = date_field }
                     )
                 }
 
@@ -424,7 +439,8 @@ fun AddScreen(
                     modifier = Modifier
                         .weight(1f)
                         .clip(RoundedCornerShape(16.dp))
-                        .padding(14.dp),
+                        .padding(14.dp)
+                        .semantics { contentDescription = hour_field },
 
                     colors = textFieldPattern
                 )
@@ -479,7 +495,7 @@ fun AddScreen(
                     text = addressErrorMessage,
                     color = textErrorColor,
                     fontSize = 12.sp,
-                    modifier = Modifier.padding(start = 8.dp, top = 4.dp)
+                    modifier = Modifier.padding(start = 8.dp, top = 4.dp).semantics { contentDescription = address_field }
                 )
             }
 
@@ -506,6 +522,7 @@ fun AddScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 14.dp)
+                    .semantics { contentDescription = validate_button }
             ) {
                 Text(text = stringResource(R.string.validate))
             }
