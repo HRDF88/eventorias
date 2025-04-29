@@ -26,6 +26,18 @@
     <string name="event_list_tittle">Liste des événements</string>
     <string name="search">Rechercher un événement</string>
 
+    <string name="sort_order_chronological">Trier par ordre chronologique</string>
+    <string name="sort_order_reverse_chronological">Trier par ordre déchronologique</string>
+    <string name="sorted_chronological">Les événements sont maintenant triés par ordre chronologique</string>
+    <string name="sorted_reverse_chronological">Les événements sont maintenant triés par ordre déchronologique</string>
+    <string name="search_toggle_open">Afficher la recherche</string>
+    <string name="search_toggle_close">Masquer la recherche</string>
+    <string name="search_announcement_open">La recherche est maintenant visible</string>
+    <string name="search_announcement_close">La recherche est maintenant masquée</string>
+
+
+
+
     //UserProfileScreen
     <string name="user_profile_tittle">Profil utilisateur</string>
     <string name="name">Nom</string>
@@ -33,6 +45,16 @@
     <string name="error_load_user">Erreur lors du chargement des données de l\'utilisateur</string>
     <string name="error_update_notification">Erreur lors de la mise à jour des paramètres de notification</string>
     <string name="notification">Notification</string>
+
+    <string name="user_name_is">Le nom d\'utilisateur est : %1$s</string>
+    <string name="user_email_is">Le mail de \'utilisateur est : %1$s</string>
+    <string name="notifications_enabled">Notifications activées</string>
+    <string name="notifications_disabled">Notifications désactivées</string>
+    <string name="toggle_notifications">Activer ou désactiver les notifications</string>
+    <string name="notification_enabled">Notification activée</string>
+    <string name="notification_disabled">Notification désactivée</string>
+
+
 
     //AddScreen
     <string name="add_tittle">Création d\'un événement</string>
@@ -61,11 +83,11 @@
     <string name="back_button">Retour</string>
     <string name="title_field">Champ Titre</string>
     <string name="description_field">Champ Description</string>
-    <string name="date_field">Champ Date</string>
-    <string name="hour_field">Champ Heure</string>
+    <string name="date_field">Champ Date le format de saisie est mois/jours/années</string>
+    <string name="hour_field">Champ Heure le format de saisie est heure:minutes</string>
     <string name="address_field">Champ Adresse</string>
-    <string name="photo_picker">Sélectionner une photo pour l\'événement</string>
-    <string name="photo_pickerPhoto">Take a photo for the event</string>
+    <string name="photo_picker">Sélectionner une photo pour l\'événement depuis la galerie</string>
+    <string name="photo_pickerPhoto">Prendre une photo pour l\'événement</string>
     <string name="validate_button">Valider l\'événement</string>
     <string name="selected_photo">Image sélectionnée</string>
 
@@ -73,6 +95,7 @@
     //DetailScreen
     <string name="error_id">ID d\'événement manquant</string>
     <string name="error_load_event">Erreur lors du chargement de l\'évènement</string>
+    <string name="map_preview_content_description">Aperçu carte statique du lieu de l\'événement</string>
 
     //EventDetailContent Accessibility
     <string name="event_image_description">Image de l\'événement</string>

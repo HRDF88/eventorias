@@ -49,8 +49,13 @@ fun EventCard(eventUi: EventUiModel, onClick: () -> Unit) {
 
 
         ) {
+
         val profilePictureTextContentDescription =
             stringResource(R.string.profile_picture_description)
+
+        //Accessibility
+        val eventStringRes = stringResource(R.string.events)
+        val eventDateStringRes = stringResource(R.string.event_date_description)
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically,
@@ -58,10 +63,10 @@ fun EventCard(eventUi: EventUiModel, onClick: () -> Unit) {
                 .padding(8.dp)
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(GraysEventoriasField),
+                .background(GraysEventoriasField)
 
 
-            ) {
+        ) {
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(eventUi.profileImage)
@@ -71,13 +76,13 @@ fun EventCard(eventUi: EventUiModel, onClick: () -> Unit) {
             )
             Image(
                 painter = painter,
-                contentDescription = profilePictureTextContentDescription,
+                contentDescription = null,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(40.dp)
                     .clip(CircleShape)
                     .border(1.dp, Color.Gray, CircleShape)
-                    .semantics { contentDescription = profilePictureTextContentDescription }
+
 
 
             )
@@ -93,17 +98,23 @@ fun EventCard(eventUi: EventUiModel, onClick: () -> Unit) {
                 ) {
                 Text(
                     text = eventUi.title,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.semantics {
+                        contentDescription = "${eventStringRes}+ ${eventUi.title}"
+                    }
                 )
                 Text(
                     text = eventUi.formattedDate,
-                    color = Color.White
+                    color = Color.White,
+                    modifier = Modifier.semantics {
+                        contentDescription = " ${eventDateStringRes}+${eventUi.formattedDate}"
+                    }
                 )
             }
 
             Image(
                 bitmap = eventUi.eventImage.asImageBitmap(),
-                contentDescription = "Event Image",
+                contentDescription = eventUi.description,
                 modifier = Modifier
                     .width(150.dp)
                     .height(100.dp)

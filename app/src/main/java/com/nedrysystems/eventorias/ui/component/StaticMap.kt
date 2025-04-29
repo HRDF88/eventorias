@@ -5,15 +5,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nedrysystems.eventorias.BuildConfig
+import com.nedrysystems.eventorias.R
+import com.nedrysystems.eventorias.utils.map.GoogleStaticMapUrlGenerator
+import com.nedrysystems.eventorias.utils.serviceInterface.StaticMapUrlGenerator
 
 
 @Composable
@@ -23,23 +28,16 @@ fun StaticMap(
     modifier: Modifier = Modifier,
     zoom: Int = 17,
     sizePx: Pair<Int, Int> = 800 to 400,
-    heightDp: Dp = 100.dp
-) {
-
-    val apiKey = BuildConfig.GOOGLE_API_KEY
-    val (widthPx, heightPx) = sizePx
-    val url = buildString {
-        append("https://maps.googleapis.com/maps/api/staticmap")
-        append("?center=$latitude,$longitude")
-        append("&zoom=$zoom")
-        append("&size=${widthPx}x${heightPx}")
-        append("&markers=color:red%7C$latitude,$longitude")
-        append("&key=$apiKey")
+    heightDp: Dp = 100.dp,
+    urlGenerator: StaticMapUrlGenerator = remember {
+        GoogleStaticMapUrlGenerator(BuildConfig.GOOGLE_API_KEY)
     }
+) {
+    val url = urlGenerator.generateUrl(latitude, longitude, zoom, sizePx)
 
     AsyncImage(
         model = url,
-        contentDescription = "Preview carte statique",
+        contentDescription = stringResource(R.string.map_preview_content_description),
         contentScale = ContentScale.Crop,
         modifier = modifier
             .fillMaxWidth()

@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.ErrorComposable
 import com.nedrysystems.eventorias.ui.component.EventDetailContent
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
@@ -45,6 +46,8 @@ fun DetailScreen(
         stringResource(id = it)
     } ?: ""
 
+    val backButton = stringResource(R.string.back_button)
+
     SideEffect {
         if (uiState.error != null) {
             Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
@@ -62,7 +65,7 @@ fun DetailScreen(
                         IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                contentDescription = null,
+                                contentDescription = backButton,
                                 tint = Color.White
                             )
                         }

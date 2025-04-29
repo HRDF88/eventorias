@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.nedrysystems.eventorias.R
 import com.nedrysystems.eventorias.ui.component.EventCard
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
+import com.nedrysystems.eventorias.utils.accessibility.AccessibilityAnnouncer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,6 +55,30 @@ fun EventListScreen(
     val context = LocalContext.current
     val searchQuery by viewModel.searchQuery.collectAsState()
     var isSearchVisible by remember { mutableStateOf(false) }
+    val searchDescription = stringResource(R.string.search)
+    val sortDescending by viewModel.sortDescending.collectAsState()
+
+    //Accessibility
+    val sortContentDescription = stringResource(
+        id = if (!sortDescending) {
+            R.string.sort_order_reverse_chronological
+        } else {
+            R.string.sort_order_chronological
+        }
+    )
+    val messageOrder = if (sortDescending)
+        context.getString(R.string.sorted_chronological)
+    else
+        context.getString(R.string.sorted_reverse_chronological)
+
+    val announcement = if (isSearchVisible) {
+        stringResource(R.string.search_announcement_close)
+    } else {
+        stringResource(R.string.search_announcement_open)
+    }
+    AccessibilityAnnouncer.announce(context, announcement)
+
+
 
     SideEffect {
         if (errorMessage.isNotEmpty()) {
@@ -78,17 +103,23 @@ fun EventListScreen(
                     containerColor = GrayEventoriasBackground
                 ),
                 actions = {
-                    IconButton(onClick = { isSearchVisible = !isSearchVisible }) {
+                    IconButton(onClick = {
+                        isSearchVisible = !isSearchVisible
+                        AccessibilityAnnouncer.announce(context, announcement)
+                    }) {
                         Icon(
                             painter = painterResource(R.drawable.search),
-                            contentDescription = "Search",
+                            contentDescription = searchDescription,
                             tint = Color.White
                         )
                     }
-                    IconButton(onClick = viewModel::toggleSortOrder) {
+                    IconButton(onClick = {
+                        viewModel.toggleSortOrder()
+                        AccessibilityAnnouncer.announce(context, messageOrder)
+                    }) {
                         Icon(
                             painter = painterResource(R.drawable.swap_vert),
-                            contentDescription = "Toggle Sort",
+                            contentDescription = sortContentDescription,
                             tint = Color.White
                         )
                     }
@@ -102,7 +133,7 @@ fun EventListScreen(
             ) {
                 Icon(
                     painter = painterResource(R.drawable.add),
-                    contentDescription = "Add Event",
+                    contentDescription = stringResource(R.string.add_tittle),
                     tint = Color.White
                 )
             }

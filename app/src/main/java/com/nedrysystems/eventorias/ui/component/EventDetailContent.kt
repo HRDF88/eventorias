@@ -182,9 +182,6 @@ fun EventDetailContent(
                         .weight(1f)
                         .height(100.dp)
                         .width(200.dp)
-                        .semantics {
-                            contentDescription = "null"
-                        }
                 )
             }
         }

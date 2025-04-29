@@ -375,7 +375,8 @@ fun AddScreen(
                     label = {
                         Text(
                             text = stringResource(R.string.date),
-                            color = textColor
+                            color = textColor,
+                            modifier = Modifier.semantics { contentDescription = date_field }
                         )
                     },
                     placeholder = {
@@ -398,7 +399,7 @@ fun AddScreen(
                         fontSize = 12.sp,
                         modifier = Modifier
                             .padding(start = 8.dp, top = 4.dp)
-                            .semantics { contentDescription = date_field }
+
                     )
                 }
 
@@ -433,7 +434,8 @@ fun AddScreen(
                     placeholder = {
                         Text(
                             text = stringResource(R.string.label_time),
-                            color = textColor
+                            color = textColor,
+                            modifier = Modifier.semantics { contentDescription = hour_field }
                         )
                     },
                     modifier = Modifier

@@ -26,6 +26,18 @@
     <string name="event_list_tittle">Event List</string>
     <string name="search">Search for an event</string>
 
+    <string name="sort_order_chronological">Sort in chronological order</string>
+    <string name="sort_order_reverse_chronological">Sort in reverse chronological order</string>
+    <string name="sorted_chronological">Events are now sorted in chronological order</string>
+    <string name="sorted_reverse_chronological">Events are now sorted in reverse chronological order</string>
+    <string name="search_toggle_open">Show search</string>
+    <string name="search_toggle_close">Hide search</string>
+    <string name="search_announcement_open">Search is now visible</string>
+    <string name="search_announcement_close">Search is now hidden</string>
+
+
+
+
     //UserProfileScreen
     <string name="user_profile_tittle">User profile</string>
     <string name="name">Name</string>
@@ -33,6 +45,16 @@
     <string name="error_load_user">Error to load user profile</string>
     <string name="error_update_notification">Error updating notification setting</string>
     <string name="notification">Notification</string>
+
+    <string name="user_name_is">The user\'s name is: %1$s</string>
+    <string name="user_email_is">The user\'s email is: %1$s</string>
+    <string name="notifications_enabled">Notifications enabled</string>
+    <string name="notifications_disabled">Notifications disabled</string>
+    <string name="toggle_notifications">Enable or disable notifications</string>
+    <string name="notification_enabled">Notification enabled</string>
+    <string name="notification_disabled">Notification disabled</string>
+
+
 
     //AddScreen
     <string name="add_tittle">Creation of an event</string>
@@ -73,6 +95,7 @@
     //DetailScreen
     <string name="error_id">Missing event ID</string>
     <string name="error_load_event">Error loading event</string>
+    <string name="map_preview_content_description">Static map preview of the event</string>
 
     //EventDetailContent Accessibility
     <string name="event_image_description">Event image</string>

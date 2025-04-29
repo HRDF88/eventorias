@@ -33,6 +33,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -43,6 +45,7 @@ import com.nedrysystems.eventorias.ui.component.ErrorComposable
 import com.nedrysystems.eventorias.ui.component.NotificationSwapButton
 import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
+import com.nedrysystems.eventorias.utils.accessibility.AccessibilityAnnouncer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +59,15 @@ fun UserProfileScreen(
         stringResource(id = it)
     } ?: ""
     val context = LocalContext.current
+
+    //Accessibility
+    val nameText = user?.let { stringResource(R.string.user_name_is, it.name) }
+    val emailText = user?.let { stringResource(R.string.user_email_is, it.email) }
+    val notificationDescription = stringResource(
+        if (isNotificationEnabled) R.string.notifications_disabled
+        else R.string.notifications_enabled
+    )
+
 
     if (userState.isLoading) {
         CircularProgressIndicator()
@@ -127,54 +139,60 @@ fun UserProfileScreen(
                     .background(GrayEventoriasBackground)
             ) {
 
-                if (user != null) {
-                    OutlinedTextField(
-                        value = user.name,
-                        onValueChange = {},
-                        label = { Text(text = stringResource(R.string.name), color = Color.White) },
-                        readOnly = true,
-                        enabled = true,
-                        singleLine = true,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = Color.White,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .background(GraysEventoriasField)
-                            .padding(8.dp)
+                OutlinedTextField(
+                    value = user.name,
+                    onValueChange = {},
+                    label = { Text(text = stringResource(R.string.name), color = Color.White) },
+                    readOnly = true,
+                    enabled = true,
+                    singleLine = true,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .background(GraysEventoriasField)
+                        .padding(8.dp)
+                        .semantics {
+                            if (nameText != null) {
+                                contentDescription = nameText
+                            }
+                        }
 
 
-                    )
-                }
+                )
 
-                if (user != null) {
-                    OutlinedTextField(
-                        value = user.email,
-                        onValueChange = {},
-                        label = {
-                            Text(
-                                text = stringResource(R.string.email),
-                                color = Color.White
-                            )
-                        },
-                        readOnly = true,
-                        enabled = true,
-                        singleLine = true,
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            textColor = Color.White,
-                            focusedBorderColor = Color.Transparent,
-                            unfocusedBorderColor = Color.Transparent
-                        ),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp)
-                            .background(GraysEventoriasField)
-                            .padding(8.dp)
-                    )
-                }
+                OutlinedTextField(
+                    value = user.email,
+                    onValueChange = {},
+                    label = {
+                        Text(
+                            text = stringResource(R.string.email),
+                            color = Color.White
+                        )
+                    },
+                    readOnly = true,
+                    enabled = true,
+                    singleLine = true,
+                    colors = TextFieldDefaults.outlinedTextFieldColors(
+                        textColor = Color.White,
+                        focusedBorderColor = Color.Transparent,
+                        unfocusedBorderColor = Color.Transparent
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp)
+                        .background(GraysEventoriasField)
+                        .padding(8.dp)
+                        .semantics {
+                            if (emailText != null) {
+                                contentDescription = emailText
+                            }
+                        }
+                )
                 Row(
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically,
@@ -186,9 +204,12 @@ fun UserProfileScreen(
 
                     NotificationSwapButton(
                         isChecked = isNotificationEnabled,
-                        onCheckedChange = { viewModel.toggleNotificationSetting() })
+                        onCheckedChange = {
+                            viewModel.toggleNotificationSetting()
+                            AccessibilityAnnouncer.announce(context, notificationDescription)
+                        })
 
-                    Text(text = stringResource(R.string.notification), color = Color.White)
+                    Text(text = stringResource(R.string.notification), color = Color.White, modifier = Modifier.semantics { contentDescription= ""})
                 }
             }
         }
