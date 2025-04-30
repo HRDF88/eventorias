@@ -1,3 +1,4 @@
+import com.android.build.gradle.BaseExtension
 import java.util.Properties
 
 plugins {
@@ -7,6 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
+    id("jacoco")
 
 
 }
@@ -22,10 +24,21 @@ val localProperties = Properties().apply {
 // Récupérer la clé API
 val apiKey: String? = localProperties.getProperty("google_api_key")
 
+tasks.withType<Test> {
+    extensions.configure(JacocoTaskExtension::class) {
+        isIncludeNoLocationClasses = true
+        excludes = listOf("jdk.internal.*")
+    }
+}
+
 android {
 
     namespace = "com.nedrysystems.eventorias"
     compileSdk = 35
+
+    testCoverage {
+        version = "0.8.8"
+    }
 
     defaultConfig {
         applicationId = "com.nedrysystems.eventorias"
@@ -50,6 +63,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+        debug {
+            enableAndroidTestCoverage = true
+            enableUnitTestCoverage = true
+            isTestCoverageEnabled = true
+        }
     }
 
     compileOptions {
@@ -72,6 +90,28 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+}
+
+val androidExtension = extensions.getByType<BaseExtension>()
+
+val jacocoTestReport by tasks.registering(JacocoReport::class) {
+    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug")
+    val mainSrc = androidExtension.sourceSets.getByName("main").java.srcDirs
+
+    classDirectories.setFrom(debugTree)
+    sourceDirectories.setFrom(files(mainSrc))
+    executionData.setFrom(fileTree(buildDir) {
+        include("**/*.exec", "**/*.ec")
+    })
 }
 
 
@@ -109,7 +149,6 @@ dependencies {
     implementation("com.firebaseui:firebase-ui-auth:9.0.0")
 
 
-
     // AndroidX Credentials API
     implementation(libs.googleid)
 
@@ -120,6 +159,10 @@ dependencies {
     implementation(libs.androidx.storage)
     implementation(libs.androidx.benchmark.macro)
     implementation(libs.androidx.ui.test.android)
+    testImplementation(libs.google.firebase.firestore)
+    testImplementation(libs.google.firebase.firestore)
+    testImplementation(libs.google.firebase.firestore)
+    testImplementation(libs.play.services.measurement.api)
     kapt("com.google.dagger:hilt-compiler:2.51.1")
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
@@ -137,12 +180,19 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation(kotlin("test"))
 
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+    testImplementation("com.google.truth:truth:1.4.0")
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    // Firebase Emulator
+    androidTestImplementation("com.google.firebase:firebase-firestore-ktx:24.11.0")
+    androidTestImplementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+
 
     // Java 8+ APIs
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")

@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.domain
+package com.nedrysystems.eventorias.domain.eventUseCaseTest
 
 import com.nedrysystems.eventorias.data.repositoryInterface.EventRepositoryInterface
 import com.nedrysystems.eventorias.domain.model.Coordinate
@@ -27,7 +27,7 @@ class GetEventByIdUseCaseTest {
 
     @Test
     fun `invoke should return event by id`() = runBlocking {
-       
+
         val event = Event(
             id = "1",
             tittle = "Fete de Jocelyn Testing",

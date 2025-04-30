@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.domain
+package com.nedrysystems.eventorias.domain.userUseCaseTest
 
 import com.google.firebase.auth.FirebaseUser
 import com.nedrysystems.eventorias.domain.mapper.toDomainUser

@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.domain
+package com.nedrysystems.eventorias.domain.mapperTest
 
 
 import com.google.common.truth.Truth.assertThat

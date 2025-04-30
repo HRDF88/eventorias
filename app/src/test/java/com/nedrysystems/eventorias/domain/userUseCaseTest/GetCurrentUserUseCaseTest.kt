@@ -1,4 +1,4 @@
-package com.nedrysystems.eventorias.domain
+package com.nedrysystems.eventorias.domain.userUseCaseTest
 
 import com.nedrysystems.eventorias.data.repositoryInterface.UserRepositoryInterface
 import com.nedrysystems.eventorias.domain.model.User
