@@ -28,7 +28,7 @@ fun BottomBar(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(GrayEventoriasBackground) // Fond global pour la box
+            .background(GrayEventoriasBackground)
     ) {
         Row(
             modifier = Modifier
@@ -59,9 +59,9 @@ fun BottomBar(navController: NavController) {
                 },
 
                 modifier = Modifier
-                    .background(GrayEventoriasBackground) // Fond pour chaque item
-                    .weight(1f) // Prend la largeur égale
-                    .padding(0.dp) // Aucun padding entre les items
+                    .background(GrayEventoriasBackground) 
+                    .weight(1f)
+                    .padding(0.dp)
             )
 
             NavigationBarItem(
@@ -76,7 +76,8 @@ fun BottomBar(navController: NavController) {
                         Icon(
                             painter = painterResource(id = R.drawable.person),
                             contentDescription = "Profile",
-                            tint = Color.White
+                            tint = Color.White,
+
                         )
                     }
                 },
@@ -90,6 +91,7 @@ fun BottomBar(navController: NavController) {
                     .background(GrayEventoriasBackground)
                     .weight(1f)
                     .padding(0.dp)
+
             )
         }
     }

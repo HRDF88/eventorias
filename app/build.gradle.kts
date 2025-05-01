@@ -159,6 +159,7 @@ dependencies {
     implementation(libs.androidx.storage)
     implementation(libs.androidx.benchmark.macro)
     implementation(libs.androidx.ui.test.android)
+    implementation(libs.androidx.ui.test.junit4.android)
     testImplementation(libs.google.firebase.firestore)
     testImplementation(libs.google.firebase.firestore)
     testImplementation(libs.google.firebase.firestore)
