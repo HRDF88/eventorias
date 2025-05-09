@@ -72,4 +72,6 @@ jobs:
             -Dsonar.projectKey=HRDF88_eventorias \
             -Dsonar.token=$SONAR_TOKEN
             -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestDebugUnitTest.xml
+            -Pandroid.injected.testOnly=true \
+            -Dandroid.testInstrumentationRunnerArguments.notAnnotation=androidx.test.filters.LargeTest
        
