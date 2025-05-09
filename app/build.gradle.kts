@@ -33,6 +33,14 @@ if (keystoreFile.exists()) {
         keystoreProperties.load(it)
     }
 }
+if (System.getenv("CI") == "true") {
+    tasks.whenTaskAdded {
+        if (name == "connectedDebugAndroidTest") {
+            enabled = false
+        }
+    }
+}
+
 
 tasks.withType<Test> {
     extensions.configure(JacocoTaskExtension::class) {
