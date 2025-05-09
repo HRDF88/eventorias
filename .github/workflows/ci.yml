@@ -57,7 +57,7 @@ jobs:
           ./gradlew sonar \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.organization=hdrf88 \
-            -Dsonar.projectKey=eventorias \
+            -Dsonar.projectKey=HRDF88_eventorias \
             -Dsonar.login=$SONAR_TOKEN
 
       - name: Generate JaCoCo coverage report
