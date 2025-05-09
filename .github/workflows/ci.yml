@@ -52,7 +52,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: jacoco-report
-          path: build/reports/jacoco/testDebugUnitTest/html/index.html  
-
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonar
+          path: build/reports/jacoco/testDebugUnitTest/html/index.html
