@@ -1,6 +1,10 @@
 name: Android CI with SonarCloud
 
 on:
+  push:
+    branches:
+      - main
+      - master
   pull_request:
     branches:
       - main
@@ -42,7 +46,7 @@ jobs:
 
       - name: Run SonarCloud analysis
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
 
       - name: Generate JaCoCo coverage report
@@ -53,3 +57,4 @@ jobs:
         with:
           name: jacoco-report
           path: build/reports/jacoco/testDebugUnitTest/html/
+
