@@ -52,14 +52,8 @@ jobs:
 
       - name: Generate JaCoCo coverage report
         run: ./gradlew jacocoTestReport
-
-      - name: Upload JaCoCo report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jacoco-report
-          path: app/build/reports/jacoco/testDebugUnitTest/html/
-
-      - name: Start Android Emulator
+      
+      - name: Run instrumented tests
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 30
@@ -67,6 +61,15 @@ jobs:
           arch: x86_64
           profile: pixel
           script: ./gradlew connectedDebugAndroidTest
+
+      - name: Generate instrumented test coverage report
+        run: ./gradlew createDebugAndroidTestCoverageReport
+
+      - name: Upload JaCoCo report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: app/build/reports/jacoco/testDebugUnitTest/html/
 
       - name: SonarCloud Analysis
         uses: sonarsource/sonarcloud-github-action@v2
