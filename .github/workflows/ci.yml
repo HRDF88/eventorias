@@ -52,11 +52,11 @@ jobs:
 
       - name: Run SonarCloud analysis
         run: |
-          ./gradlew sonar \
+          ./gradlew sonar --info  \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.organization=hdrf88 \
             -Dsonar.projectKey=HRDF88_eventorias \
-            -Dsonar.login=$SONAR_TOKEN
+            -Dsonar.token=${SONAR_TOKEN}
 
       - name: Generate JaCoCo coverage report
         run: ./gradlew jacocoTestReport
