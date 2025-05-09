@@ -9,7 +9,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
     id("jacoco")
-    id("org.sonarqube") version "6.1.0.5360"
+    id("org.sonarqube") version "4.4.1.3373"
 
 
 }
