@@ -1,0 +1,2 @@
+*.iso filter=lfs diff=lfs merge=lfs -text
+java_pid2700.hprof filter=lfs diff=lfs merge=lfs -text
