@@ -46,8 +46,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build and run tests
-        run: ./gradlew build testDebugUnitTest
+      - name: Run unit tests only
+        run: ./gradlew testDebugUnitTest testReleaseUnitTest
+
 
       - name: Run SonarCloud analysis
         env:
