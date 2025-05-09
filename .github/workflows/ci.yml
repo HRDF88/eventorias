@@ -51,10 +51,8 @@ jobs:
 
 
       - name: Run SonarCloud analysis
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./gradlew sonarqube \
+          ./gradlew sonar \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.organization=hdrf88 \
             -Dsonar.projectKey=HRDF88_eventorias \
