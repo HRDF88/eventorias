@@ -84,7 +84,7 @@ android {
             var keyAlias = keystoreProperties["keyAlias"] as String?
             var keyPassword = keystoreProperties["keyPassword"] as String?
 
-            // Si les propriétés sont présentes, on les utilise, sinon on laisse la configuration de signature vide
+            // Si les propriétés sont présentes, on les utilise, sinon on laisse la configuration de signature vide.
             if (storeFilePath != null && storePassword != null && keyAlias != null && keyPassword != null) {
                 storeFile = file(storeFilePath)
                 storePassword = storePassword
