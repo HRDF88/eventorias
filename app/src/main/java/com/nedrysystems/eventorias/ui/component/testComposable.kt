@@ -5,5 +5,7 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun ComposableTest(){
-    Text(text="test5")
+    Text(text="test656655555")
+    Text(text="test656655555")
+
 }
