@@ -53,7 +53,12 @@ jobs:
       - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew sonarqube -Dsonar.login=$SONAR_TOKEN
+        run: |
+          ./gradlew sonar \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.organization=hdrf88 \
+            -Dsonar.projectKey=eventorias \
+            -Dsonar.login=$SONAR_TOKEN
 
       - name: Generate JaCoCo coverage report
         run: ./gradlew jacocoTestReport
