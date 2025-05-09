@@ -54,7 +54,6 @@ import com.nedrysystems.eventorias.ui.theme.GrayEventoriasBackground
 import com.nedrysystems.eventorias.ui.theme.GraysEventoriasField
 import com.nedrysystems.eventorias.utils.date.DateFormatter
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -488,7 +487,9 @@ fun AddScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(16.dp))
-                    .padding(14.dp),
+                    .padding(14.dp)
+                    .semantics { contentDescription = address_field },
+
 
                 colors = textFieldPattern
             )

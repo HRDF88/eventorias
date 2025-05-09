@@ -9,6 +9,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     kotlin("kapt")
     id("jacoco")
+    id("org.sonarqube") version "6.1.0.5360"
 
 
 }
@@ -24,10 +25,29 @@ val localProperties = Properties().apply {
 // Récupérer la clé API
 val apiKey: String? = localProperties.getProperty("google_api_key")
 
+//Charge la clé release
+val keystoreProperties = Properties()
+val keystoreFile = rootProject.file("keystore.properties")
+if (keystoreFile.exists()) {
+    keystoreFile.inputStream().use {
+        keystoreProperties.load(it)
+    }
+}
+
 tasks.withType<Test> {
     extensions.configure(JacocoTaskExtension::class) {
         isIncludeNoLocationClasses = true
         excludes = listOf("jdk.internal.*")
+    }
+}
+
+sonarqube {
+    properties {
+        property("sonar.organization", "Julien_Seguin") // organisation SonarCloud
+        property("sonar.projectKey", "hrdf88")    // identifiant de projet SonarCloud
+        property("sonar.projectName", "eventorias") // Nom de  projet SonarCloud
+        property("sonar.host.url", "https://sonarcloud.io") // URL de SonarCloud
+        property("sonar.login", project.findProperty("sonar.token") ?: "") // Token généré dans SonarCloud
     }
 }
 
@@ -54,6 +74,14 @@ android {
 
         buildConfigField("String", "GOOGLE_API_KEY", "\"$apiKey\"")
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+        }
+    }
 
     buildTypes {
         release {
@@ -62,6 +90,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
         debug {
             enableAndroidTestCoverage = true
@@ -87,7 +116,7 @@ android {
     }
     packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/{AL2.0,LGPL2.1,LICENSE.md,LICENSE-notice.md}"
         }
     }
 }
@@ -168,6 +197,8 @@ dependencies {
     implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.51.1")
+    androidTestImplementation ("androidx.hilt:hilt-navigation-compose:1.2.0")
+
 
     // Coil (images)
     implementation("io.coil-kt:coil:2.3.0")
@@ -180,6 +211,12 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation(kotlin("test"))
+    androidTestImplementation("org.mockito:mockito-android:5.2.0")
+    testImplementation("io.mockk:mockk-android:1.13.7")
+    androidTestImplementation("io.mockk:mockk-android:1.13.7")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.0")
+
+
 
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
     androidTestImplementation(libs.androidx.junit)

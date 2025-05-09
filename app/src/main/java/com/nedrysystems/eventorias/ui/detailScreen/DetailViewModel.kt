@@ -35,7 +35,7 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(DetailUiState(isLoading = true))
-    val uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
+    var uiState: StateFlow<DetailUiState> = _uiState.asStateFlow()
 
     private val eventId: String = (savedStateHandle.get<String>("eventId") ?: run {
         _uiState.value = DetailUiState(error = R.string.error_id)
