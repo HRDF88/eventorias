@@ -73,9 +73,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./gradlew sonar --info \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.organization=hdrf88 \
-            -Dsonar.projectKey=HRDF88_eventorias \
-            -Dsonar.token=$SONAR_TOKEN \
-            -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestReport.xml
-
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.organization=hrdf88 \
+          -Dsonar.projectKey=HRDF88_eventorias \
+          -Dsonar.login=$SONAR_TOKEN \
+          -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestReport.xml
