@@ -50,17 +50,16 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Run unit tests only
-        run: ./gradlew test
-        continue-on-error: true  # Continue even if tests fail
+
         
       - name: Disable AndroidTestCoverage task
         run: |
           echo "// Disable AndroidTestCoverage task" >> app/build.gradle.kts
           echo "tasks.matching { it.name == \"createDebugAndroidTestCoverageReport\" }.configureEach { enabled = false }" >> app/build.gradle.kts
 
-      - name: Generate JaCoCo unit test coverage report
-        run: ./gradlew jacocoTestReport
+      - name: Run unit tests and generate JaCoCo report
+        run: ./gradlew testDebugUnitTest jacocoTestReport
+
 
       - name: Upload JaCoCo coverage report (HTML)
         uses: actions/upload-artifact@v4
