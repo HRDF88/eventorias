@@ -60,6 +60,9 @@ jobs:
       - name: Run unit tests and generate JaCoCo report
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
+      - name: List generated JaCoCo HTML report files
+        run: ls -R app/build/reports/jacoco/testDebugUnitTest/html
+
 
       - name: Upload JaCoCo coverage report (HTML)
         uses: actions/upload-artifact@v4
