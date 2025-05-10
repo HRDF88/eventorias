@@ -69,7 +69,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: app/build/reports/jacoco/testDebugUnitTest/html/
+          path: app/build/reports/jacoco/testDebugUnitTest/jacocoTestDebugUnitTest.xml
 
       - name: SonarCloud Analysis
         uses: sonarsource/sonarcloud-github-action@v2
