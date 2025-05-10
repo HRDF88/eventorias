@@ -115,9 +115,9 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         debug {
-            //enableAndroidTestCoverage = true
+            enableAndroidTestCoverage = false
             enableUnitTestCoverage = true
-            isTestCoverageEnabled = true
+
         }
     }
 
@@ -144,7 +144,11 @@ android {
 }
 
 val androidExtension = extensions.getByType<BaseExtension>()
-
+afterEvaluate {
+    tasks.matching { it.name == "createDebugAndroidTestCoverageReport" }.configureEach {
+        enabled = false
+    }
+}
 val jacocoTestReport by tasks.registering(JacocoReport::class) {
     dependsOn("testDebugUnitTest", "createDebugCoverageReport")
     group = "Reporting"
@@ -155,18 +159,25 @@ val jacocoTestReport by tasks.registering(JacocoReport::class) {
         html.required.set(true)
     }
 
-    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug")
-    val mainSrc = androidExtension.sourceSets.getByName("main").java.srcDirs
+    // Kotlin classes compilées
+    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
+    }
+
+    // Sources
+    val mainSrc = file("src/main/java")
 
     classDirectories.setFrom(debugTree)
     sourceDirectories.setFrom(files(mainSrc))
-    executionData.setFrom(fileTree(buildDir) {
-        include("**/*.exec", "**/*.ec")
-    })
-    tasks.matching { it.name == "createDebugAndroidTestCoverageReport" }.configureEach {
-        enabled = false
-    }
+    executionData.setFrom(
+        fileTree(buildDir).include(
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+        )
+    )
 }
+
+
 
 
 dependencies {
