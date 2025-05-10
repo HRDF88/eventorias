@@ -92,14 +92,14 @@ android {
             var keyAlias = keystoreProperties["keyAlias"] as String?
             var keyPassword = keystoreProperties["keyPassword"] as String?
 
-            // Si les propriétés sont présentes, on les utilise, sinon on laisse la configuration de signature vide.
+
             if (storeFilePath != null && storePassword != null && keyAlias != null && keyPassword != null) {
                 storeFile = file(storeFilePath)
                 storePassword = storePassword
                 keyAlias = keyAlias
                 keyPassword = keyPassword
             } else {
-                // Si le keystore n'est pas défini, on ne configure pas la signature
+
                 println("Keystore information is missing, skipping signing configuration.")
             }
         }
@@ -115,7 +115,7 @@ android {
             signingConfig = signingConfigs.getByName("release")
         }
         debug {
-            enableAndroidTestCoverage = true
+            //enableAndroidTestCoverage = true
             enableUnitTestCoverage = true
             isTestCoverageEnabled = true
         }
@@ -163,6 +163,9 @@ val jacocoTestReport by tasks.registering(JacocoReport::class) {
     executionData.setFrom(fileTree(buildDir) {
         include("**/*.exec", "**/*.ec")
     })
+    tasks.matching { it.name == "createDebugAndroidTestCoverageReport" }.configureEach {
+        enabled = false
+    }
 }
 
 
