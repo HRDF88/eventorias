@@ -144,9 +144,8 @@ android {
 }
 
 val androidExtension = extensions.getByType<BaseExtension>()
-tasks.matching { it.name == "createDebugAndroidTestCoverageReport" }.configureEach {
-    enabled = false
-}
+
+
 val jacocoTestReport by tasks.registering(JacocoReport::class) {
     dependsOn("testDebugUnitTest", "createDebugCoverageReport")
     group = "Reporting"
