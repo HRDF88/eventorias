@@ -70,6 +70,12 @@ jobs:
           name: jacoco-report
           path: app/build/reports/jacoco/testDebugUnitTest/html
 
+      - name: Upload JaCoCo XML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-xml
+          path: app/build/reports/jacoco/testDebugUnitTest/jacocoTestReport.xml
+
       - name: SonarCloud Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -79,4 +85,4 @@ jobs:
           -Dsonar.organization=hrdf88 \
           -Dsonar.projectKey=HRDF88_eventorias \
           -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/html
+          -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestReport.xml
