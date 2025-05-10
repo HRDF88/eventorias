@@ -60,6 +60,13 @@ jobs:
       - name: Run unit tests and generate JaCoCo report
         run: ./gradlew testDebugUnitTest jacocoTestReport
 
+      - name: Check if Jacoco XML file exists
+        run: |
+          if [ ! -f app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml ]; then
+            echo "Jacoco XML file not found!"
+            exit 1
+          fi
+
       - name: List generated JaCoCo HTML report files
         run: ls -R app/build/reports/jacoco/testDebugUnitTest/html
 
