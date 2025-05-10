@@ -57,7 +57,7 @@ sonarqube {
         property("sonar.host.url", "https://sonarcloud.io") // URL de SonarCloud
         property("sonar.login", project.findProperty("sonar.token") ?: "") // Token généré dans SonarCloud
         property("sonar.junit.reportPaths", "build/test-results/testDebugUnitTest/TEST-com.nedrysystems.eventorias.xml")
-        property("sonar.coverage.jacoco.xmlReportPaths", "build/test-results/testDebugUnitTest/TEST-com.nedrysystems.eventorias.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "app/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml")
     }
 }
 
@@ -146,31 +146,39 @@ android {
 val androidExtension = extensions.getByType<BaseExtension>()
 
 
-// Generate Jacoco HTML/XML reports
-val jacocoCoverageReport by tasks.registering(JacocoReport::class) {
-    dependsOn("testDebugUnitTest", "createDebugCoverageReport")
-    group = "Reporting"
-    description = "Generates Jacoco code coverage reports"
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
 
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
 
-    val compiledClasses = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug"))
-    val sourceDirs = extensions.getByType<BaseExtension>().sourceSets.getByName("main").java.srcDirs
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*"
+    )
 
-    classDirectories.setFrom(compiledClasses)
-    sourceDirectories.setFrom(files(sourceDirs))
+    val debugTree = fileTree("${buildDir}/intermediates/javac/debug") {
+        exclude(fileFilter)
+    }
 
-    // Exclude generated DI classes (Hilt, Dagger) from coverage
-    val excludedPackages = mutableSetOf("**/dagger/**", "**/hilt/**")
+    val kotlinDebugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+    }
 
-    executionData.setFrom(fileTree(layout.buildDirectory) {
-        include("**/*.exec", "**/*.ec")
-        exclude(excludedPackages)
-    })
+    classDirectories.setFrom(files(debugTree, kotlinDebugTree))
+    sourceDirectories.setFrom(files("src/main/java", "src/main/kotlin"))
+    executionData.setFrom(fileTree(buildDir).include(
+        "jacoco/testDebugUnitTest.exec",
+        "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
+    ))
 }
+
 
 
 
