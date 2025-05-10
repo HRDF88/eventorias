@@ -56,7 +56,7 @@ sonarqube {
         property("sonar.projectName", "eventorias") // Nom de  projet SonarCloud
         property("sonar.host.url", "https://sonarcloud.io") // URL de SonarCloud
         property("sonar.login", project.findProperty("sonar.token") ?: "") // Token généré dans SonarCloud
-        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get().asFile}/reports/jacoco/testDebugUnitTest/jacocoTestReport.xml")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get().asFile}/reports/jacoco/testDebugUnitTest/jacocoTestReport.html")
     }
 }
 
