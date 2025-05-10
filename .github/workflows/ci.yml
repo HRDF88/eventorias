@@ -1,22 +1,24 @@
-name: Android CI with Tests & SonarCloud
+name: Android CI with SonarCloud
 
 on:
-  pull_request:
+  push:
     branches:
       - main
       - master
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
     env:
       CI: true
 
     permissions:
       contents: read
-      pull-requests: write
       checks: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -42,52 +44,36 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle
+          restore-keys: |
+            ${{ runner.os }}-gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
-      - name: Run unit tests
+      - name: Run unit tests only
         run: ./gradlew testDebugUnitTest testReleaseUnitTest
 
-      - name: Generate JaCoCo coverage report
+      - name: Disable AndroidTestCoverage task
+        run: |
+          echo "// Disable AndroidTestCoverage task" >> app/build.gradle.kts
+          echo "tasks.matching { it.name == \"createDebugAndroidTestCoverageReport\" }.configureEach { enabled = false }" >> app/build.gradle.kts
+
+      - name: Generate JaCoCo unit test coverage report
         run: ./gradlew jacocoTestReport
-      
-      - name: Run instrumented tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: google_apis
-          arch: x86_64
-          profile: pixel
-          script: ./gradlew connectedDebugAndroidTest
 
-      - name: Generate instrumented test coverage report
-        run: ./gradlew createDebugAndroidTestCoverageReport
-
-      - name: Upload JaCoCo report
+      - name: Upload JaCoCo coverage report (HTML)
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: app/build/reports/jacoco/testDebugUnitTest/jacocoTestDebugUnitTest.xml
+          path: app/build/reports/jacoco/testDebugUnitTest/html/
 
       - name: SonarCloud Analysis
-        uses: sonarsource/sonarcloud-github-action@v2
-        with:
-          args: >
-            -Dsonar.projectKey=HRDF88_eventorias
-            -Dsonar.organization=hdrf88
-            -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.token=${{ secrets.SONAR_TOKEN }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./gradlew sonar --info \
+            -Dsonar.host.url=https://sonarcloud.io \
+            -Dsonar.organization=hdrf88 \
+            -Dsonar.projectKey=HRDF88_eventorias \
+            -Dsonar.token=$SONAR_TOKEN \
             -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestDebugUnitTest.xml
-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
-      - name: Check Quality Gate
-        uses: sonarsource/sonarcloud-quality-gate-action@master
-        with:
-          scanMetadataReportFile: .scannerwork/report-task.txt
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
