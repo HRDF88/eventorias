@@ -146,32 +146,30 @@ android {
 val androidExtension = extensions.getByType<BaseExtension>()
 
 
-val jacocoTestReport by tasks.registering(JacocoReport::class) {
+// Generate Jacoco HTML/XML reports
+val jacocoCoverageReport by tasks.registering(JacocoReport::class) {
     dependsOn("testDebugUnitTest", "createDebugCoverageReport")
     group = "Reporting"
-    description = "Generate Jacoco coverage reports"
+    description = "Generates Jacoco code coverage reports"
 
     reports {
         xml.required.set(true)
         html.required.set(true)
     }
 
-    // Kotlin classes compilées
-    val debugTree = fileTree("${buildDir}/tmp/kotlin-classes/debug") {
-        exclude("**/R.class", "**/R$*.class", "**/BuildConfig.*", "**/Manifest*.*")
-    }
+    val compiledClasses = fileTree(layout.buildDirectory.dir("tmp/kotlin-classes/debug"))
+    val sourceDirs = extensions.getByType<BaseExtension>().sourceSets.getByName("main").java.srcDirs
 
-    // Sources
-    val mainSrc = file("src/main/java")
+    classDirectories.setFrom(compiledClasses)
+    sourceDirectories.setFrom(files(sourceDirs))
 
-    classDirectories.setFrom(debugTree)
-    sourceDirectories.setFrom(files(mainSrc))
-    executionData.setFrom(
-        fileTree(buildDir).include(
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-        )
-    )
+    // Exclude generated DI classes (Hilt, Dagger) from coverage
+    val excludedPackages = mutableSetOf("**/dagger/**", "**/hilt/**")
+
+    executionData.setFrom(fileTree(layout.buildDirectory) {
+        include("**/*.exec", "**/*.ec")
+        exclude(excludedPackages)
+    })
 }
 
 
