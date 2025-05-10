@@ -79,4 +79,4 @@ jobs:
           -Dsonar.organization=hrdf88 \
           -Dsonar.projectKey=HRDF88_eventorias \
           -Dsonar.login=$SONAR_TOKEN \
-          -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/jacocoTestReport.html
+          -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTest/html
