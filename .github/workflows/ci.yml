@@ -68,7 +68,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: jacoco-report
-          path: app/build/reports/coverage/androidTest/debug/connected/report.xml
+          path: app/build/reports/jacoco/testDebugUnitTest/html
 
       - name: SonarCloud Analysis
         env:
