@@ -24,8 +24,9 @@ jobs:
 
       # Décryptage du keystore
       - name: Decode release_key2.jks
-        run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > app/release_key2.jks
+        run: echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > app/release_key2.jks
+        env:
+          KEYSTORE_PATH: app/release_key2.jks
       
 
       # Donner les droits à gradlew

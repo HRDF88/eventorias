@@ -85,12 +85,22 @@ android {
     }
     signingConfigs {
         create("release") {
-            storeFile = file("release_key2.jks")
-            storePassword = System.getenv("KEYSTORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS")
-            keyPassword = System.getenv("KEY_PASSWORD")
+            val storeFilePath = System.getenv("KEYSTORE_PATH")
+            val storePasswordEnv = System.getenv("KEYSTORE_PASSWORD")
+            val keyAliasEnv = System.getenv("KEY_ALIAS")
+            val keyPasswordEnv = System.getenv("KEY_PASSWORD")
+
+            if (storeFilePath != null && storePasswordEnv != null && keyAliasEnv != null && keyPasswordEnv != null) {
+                storeFile = file(storeFilePath)
+                storePassword = storePasswordEnv
+                keyAlias = keyAliasEnv
+                keyPassword = keyPasswordEnv
+            } else {
+                println("Keystore information is missing. Signing configuration will be skipped.")
+            }
         }
     }
+
 
 
     buildTypes {
