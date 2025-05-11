@@ -40,13 +40,15 @@ jobs:
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       # Déploiement sur Firebase App Distribution
-      - name: Upload APK to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+      - name: Upload to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
         with:
-          appId: ${{ secrets.FIREBASE_APP_ID }}
-          token: ${{ secrets.FIREBASE_AUTH_TOKEN }}
-          groups: testers
-          file: app/build/outputs/apk/release/app-release.apk
+          appId: ${{ secrets.FIREBASE_APP_ID }}   # Firebase Application ID
+          groups: testers                         # Firebase group defined for testers
+          file: app/build/outputs/apk/release/app-release.apk  # Path to the generated APK
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}  # Firebase service account JSON key
+        env:
+          ACTIONS_STEP_DEBUG: true # Enable step debug output for troubleshooting
 
       # Suppression du keystore
       - name: Clean up keystore
