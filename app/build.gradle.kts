@@ -85,12 +85,10 @@ android {
     }
     signingConfigs {
         create("release") {
-            // Vérifie si les propriétés sont disponibles
-            val storeFilePath = keystoreProperties["storeFile"] as String?
-            var storePassword = keystoreProperties["storePassword"] as String?
-            var keyAlias = keystoreProperties["keyAlias"] as String?
-            var keyPassword = keystoreProperties["keyPassword"] as String?
-
+            val storeFilePath = System.getenv("KEYSTORE_PATH")  // Utilisez l'environnement pour récupérer le fichier
+            var storePassword = System.getenv("KEYSTORE_PASSWORD")
+            var keyAlias = System.getenv("KEY_ALIAS")
+            var keyPassword = System.getenv("KEY_PASSWORD")
 
             if (storeFilePath != null && storePassword != null && keyAlias != null && keyPassword != null) {
                 storeFile = file(storeFilePath)
@@ -98,11 +96,11 @@ android {
                 keyAlias = keyAlias
                 keyPassword = keyPassword
             } else {
-
                 println("Keystore information is missing, skipping signing configuration.")
             }
         }
     }
+
 
     buildTypes {
         release {
@@ -152,6 +150,7 @@ tasks.register<JacocoReport>("jacocoTestReport") {
         xml.required.set(true)
         html.required.set(true)
         html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/testDebugUnitTest/html"))
+
     }
 
     val fileFilter = listOf(
