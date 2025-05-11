@@ -23,8 +23,10 @@ jobs:
           distribution: 'adopt'
 
       # Décryptage du keystore
-      - name: Decrypt keystore
-        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
+      - name: Decode release_key2.jks
+        run: |
+          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > app/release_key2.jks
+      
 
       # Donner les droits à gradlew
       - name: Make gradlew executable
@@ -39,7 +41,7 @@ jobs:
       - name: Build APK
         run: |
           ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=my-release-key.jks \
+            -Pandroid.injected.signing.store.file=release_key2.jks \
             -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
             -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
             -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
