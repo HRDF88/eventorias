@@ -22,12 +22,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      # Configuration de l'Android SDK
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v2
-        with:
-          sdk-version: '35'
-
       # Décryptage du keystore (si nécessaire)
       - name: Decrypt keystore (Optional)
         run: |
