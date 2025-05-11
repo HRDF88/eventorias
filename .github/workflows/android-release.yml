@@ -22,16 +22,22 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
 
-      # Décryptage du keystore (si nécessaire)
-      - name: Decrypt keystore (Optional)
-        run: |
-          echo "$KEYSTORE" | base64 --decode > my-release-key.jks
-        env:
-          KEYSTORE: ${{ secrets.KEYSTORE }}
+      # Décryptage du keystore
+      - name: Decrypt keystore
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > my-release-key.jks
 
-      # Compilation de l'APK
+      # Donner les droits à gradlew
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      # Compilation de l'APK avec signature
       - name: Build APK
-        run: ./gradlew assembleRelease
+        run: |
+          ./gradlew assembleRelease \
+            -Pandroid.injected.signing.store.file=my-release-key.jks \
+            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
+            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
+            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
 
       # Déploiement sur Firebase App Distribution
       - name: Upload APK to Firebase App Distribution
@@ -39,9 +45,9 @@ jobs:
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}
           token: ${{ secrets.FIREBASE_AUTH_TOKEN }}
-          groups: testers  # Le nom du groupe de testeurs Firebase
-          file: app/build/outputs/apk/release/app-release.apk  # Le chemin vers votre APK généré
+          groups: testers
+          file: app/build/outputs/apk/release/app-release.apk
 
-      # Suppression du keystore (si nécessaire)
-      - name: Clean up keystore (Optional)
+      # Suppression du keystore
+      - name: Clean up keystore
         run: rm my-release-key.jks
