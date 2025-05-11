@@ -30,10 +30,10 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-        # Création du fichier google-services.json
-      - name: Create google-services.json
+      #Création du fichier google-services.json à partir du secret encodé en base64
+      - name: Decode google-services.json
         run: |
-          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' > app/google-services.json
+          echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
 
       # Compilation de l'APK avec signature
       - name: Build APK
