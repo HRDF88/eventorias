@@ -57,6 +57,19 @@ jobs:
       - name: Build APK
         run: ./gradlew assembleRelease
 
+      # Vérification que le JSON est bien formaté
+      - name: Check if service account JSON is valid
+        run: |
+          echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' | jq . >/dev/null || echo "Invalid JSON"
+
+      # Vérification que l'appId est bien défini
+      - name: Check if Firebase appId is defined
+        run: |
+         if [ -z "${{ secrets.FIREBASE_APP_ID }}" ]; then
+         echo "FIREBASE_APP_ID is not set" && exit 1
+         fi
+         echo "FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}"
+
       # Déploiement sur Firebase App Distribution
       - name: Upload to Firebase App Distribution
         uses: wzieba/Firebase-Distribution-Github-Action@v1
