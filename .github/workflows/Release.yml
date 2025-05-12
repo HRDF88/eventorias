@@ -80,10 +80,10 @@ jobs:
 
       # Déploiement sur Firebase App Distribution
       - name: Upload to Firebase App Distribution
-        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@v1.5.1
         with:
           appId: ${{ secrets.FIREBASE_APP_ID }}   # Firebase Application ID
-          groups: julien.seguin@hotmail.fr                         # Firebase group defined for testers
+          groups: testers                         # Firebase group defined for testers
           file: app/build/outputs/apk/release/app-release.apk  # Path to the generated APK
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}  # Firebase service account JSON key
         env:
