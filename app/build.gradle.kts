@@ -85,24 +85,22 @@ android {
     }
     signingConfigs {
         create("release") {
-            // Vérifie si les propriétés sont disponibles
             val storeFilePath = keystoreProperties["storeFile"] as String?
-            var storePassword = keystoreProperties["storePassword"] as String?
-            var keyAlias = keystoreProperties["keyAlias"] as String?
-            var keyPassword = keystoreProperties["keyPassword"] as String?
+            val storePasswordProp = keystoreProperties["storePassword"] as String?
+            val keyAliasProp = keystoreProperties["keyAlias"] as String?
+            val keyPasswordProp = keystoreProperties["keyPassword"] as String?
 
-
-            if (storeFilePath != null && storePassword != null && keyAlias != null && keyPassword != null) {
+            if (storeFilePath != null && storePasswordProp != null && keyAliasProp != null && keyPasswordProp != null) {
                 storeFile = file(storeFilePath)
-                storePassword = storePassword
-                keyAlias = keyAlias
-                keyPassword = keyPassword
+                storePassword = storePasswordProp
+                keyAlias = keyAliasProp
+                keyPassword = keyPasswordProp
             } else {
-
-                println("Keystore information is missing, skipping signing configuration.")
+                println("⚠️ Keystore information is missing, signing config 'release' will not be properly set.")
             }
         }
     }
+
 
     buildTypes {
         release {
