@@ -43,14 +43,19 @@ jobs:
         run: |
           echo "${{ secrets.GOOGLE_SERVICES_JSON }}" | base64 --decode > app/google-services.json
 
-      # Compilation de l'APK avec signature
-      - name: Build APK
+      # Création du fichier keystore.properties
+      - name: Create keystore.properties
         run: |
-          ./gradlew assembleRelease \
-            -Pandroid.injected.signing.store.file=release_key2.jks \
-            -Pandroid.injected.signing.store.password=${{ secrets.KEYSTORE_PASSWORD }} \
-            -Pandroid.injected.signing.key.alias=${{ secrets.KEY_ALIAS }} \
-            -Pandroid.injected.signing.key.password=${{ secrets.KEY_PASSWORD }}
+          cat <<EOF > keystore.properties
+          storeFile=app/release_key2.jks
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+     # Compilation de l'APK avec signature
+      - name: Build APK
+        run: ./gradlew assembleRelease
 
       # Déploiement sur Firebase App Distribution
       - name: Upload to Firebase App Distribution
