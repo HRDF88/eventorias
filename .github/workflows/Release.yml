@@ -25,7 +25,7 @@ jobs:
   # Décryptage du keystore
       - name: Decode release_key2.jks
         run: |
-          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > app/release_key2.jks
+          echo "${{ secrets.RELEASE_KEYSTORE }}" | base64 --decode > release_key2.jks
           echo "✅ Keystore has been decoded and saved to: $(pwd)/app/release_key2.jks"
           echo "📁 Contents of app/ directory:"
           ls -l app/
